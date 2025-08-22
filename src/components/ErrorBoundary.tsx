@@ -145,7 +145,7 @@ export class ErrorBoundary extends React.Component<
     }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({
       error,
       errorInfo,
@@ -173,7 +173,7 @@ export class ErrorBoundary extends React.Component<
     })
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback || DefaultErrorFallback
       return (
@@ -181,7 +181,7 @@ export class ErrorBoundary extends React.Component<
           error={this.state.error}
           errorInfo={this.state.errorInfo}
           resetError={this.resetError}
-          showDetails={this.props.showDetails}
+          showDetails={this.props.showDetails ?? false}
         />
       )
     }

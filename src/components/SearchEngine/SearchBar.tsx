@@ -44,15 +44,16 @@ export function SearchBar() {
     >
       <form onSubmit={handleSearch} className="relative">
         {/* Search Engine Selector */}
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 z-10">
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowEngines(!showEngines)}
               className={cn(
-                "flex items-center gap-2 px-4 py-3 rounded-2xl",
+                "flex items-center gap-2 px-3 py-2 rounded-xl",
                 "neumorphic-button-premium",
-                "text-claude-gray-700 dark:text-claude-gray-300"
+                "text-claude-gray-700 dark:text-claude-gray-300",
+                "h-12 text-sm"
               )}
             >
               <img 
@@ -118,7 +119,7 @@ export function SearchBar() {
             onBlur={() => setSearchFocused(false)}
             placeholder={currentEngine.placeholder || t('search.placeholder')}
             className={cn(
-              "w-full h-16 pl-40 pr-14 rounded-2xl",
+              "w-full h-16 pl-36 pr-16 rounded-2xl",
               "search-input text-lg"
             )}
           />

@@ -1,4 +1,4 @@
-import { useEffect, Suspense, useState, useCallback } from 'react'
+import { useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -15,21 +15,18 @@ import { SettingsModal } from './components/Settings/SettingsModal'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { SuspenseFallback } from './components/LoadingSpinner'
 import { SeasonalEffects, useSeasonalEffects } from './components/DelightfulEffects/SeasonalEffects'
-import { AchievementSystem, defaultAchievements, unlockAchievement, updateAchievementProgress, type Achievement } from './components/DelightfulEffects/AchievementSystem'
 import { cn } from './utils'
 import { logError } from './utils/errorHandling'
 import { delightfulAnimations } from './utils/delightfulAnimations'
 
 function App() {
   const { i18n } = useTranslation()
-  const { settings, setSettingsOpen, quickLaunch } = useAppStore()
-  const [achievements, setAchievements] = useState<Achievement[]>(defaultAchievements)
-  const [firstVisit, setFirstVisit] = useState(true)
+  const { settings, setSettingsOpen } = useAppStore()
   
   // Initialize hooks
   useTheme()
   useGlobalShortcuts()
-  const seasonalEffects = useSeasonalEffects()
+  useSeasonalEffects()
 
   // Sync language setting with i18n
   useEffect(() => {
@@ -41,53 +38,13 @@ function App() {
     document.documentElement.classList.add('dark:bg-claude-dark')
   }, [])
 
-  // 首次访问成就
+  // 延迟触发图标动画，确保页面已加载
   useEffect(() => {
-    if (firstVisit) {
-      setAchievements(prev => unlockAchievement(prev, 'first-launch'))
-      setFirstVisit(false)
-      
-      // 延迟触发，确保页面已加载
-      setTimeout(() => {
-        delightfulAnimations.animateIconEntry(document.body, 0)
-      }, 1000)
-    }
-  }, [firstVisit])
-
-  // 监控快速启动项数量变化
-  useEffect(() => {
-    const customItemsCount = quickLaunch.filter(item => item.isCustom).length
-    
-    if (customItemsCount >= 1) {
-      setAchievements(prev => unlockAchievement(prev, 'first-custom-item'))
-    }
-    
-    if (customItemsCount >= 20) {
-      setAchievements(prev => unlockAchievement(prev, 'power-user'))
-    }
-  }, [quickLaunch])
-
-  // 成就回调
-  const handleAchievementUnlock = useCallback((achievement: Achievement) => {
-    console.log('Achievement unlocked:', achievement.title)
-    
-    // 根据稀有度播放不同的庆祝效果
-    if (achievement.rarity === 'legendary') {
-      // 传奇成就 - 全屏庆祝
-      delightfulAnimations.triggerCelebration()
-      if (seasonalEffects.isSpecialDate) {
-        delightfulAnimations.createSeasonalEffect(seasonalEffects.season)
-      }
-    } else if (achievement.rarity === 'epic') {
-      // 史诗成就 - 较大庆祝
-      delightfulAnimations.triggerCelebration({ x: window.innerWidth - 150, y: 100 })
-    }
-  }, [seasonalEffects])
-
-  // 公开成就更新方法
-  const updateAchievements = useCallback((achievementId: string, increment: number = 1) => {
-    setAchievements(prev => updateAchievementProgress(prev, achievementId, increment))
+    setTimeout(() => {
+      delightfulAnimations.animateIconEntry(document.body, 0)
+    }, 1000)
   }, [])
+
 
   const handleSettingsClick = () => {
     setSettingsOpen(true)
@@ -110,7 +67,7 @@ function App() {
         </ErrorBoundary>
         
         {/* 季节性效果 */}
-        <SeasonalEffects isVisible={settings.animations !== false} />
+        <SeasonalEffects isVisible={true} />
         
         {/* Settings button */}
         <motion.button
@@ -171,11 +128,6 @@ function App() {
           </Suspense>
         </ErrorBoundary>
         
-        {/* 成就系统 */}
-        <AchievementSystem 
-          achievements={achievements}
-          onAchievementUnlock={handleAchievementUnlock}
-        />
       </div>
     </ErrorBoundary>
   )

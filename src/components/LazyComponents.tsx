@@ -18,7 +18,7 @@ export const LazyBackgroundImage = lazy(() =>
 export const withLazyLoading = <P extends object>(
   LazyComponent: ComponentType<P>,
   fallback?: React.ReactNode,
-  errorFallback?: React.ReactNode
+  _errorFallback?: React.ReactNode
 ) => {
   const WrappedComponent = (props: P) => {
     return (

@@ -74,11 +74,11 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   const renderVariant = () => {
     switch (variant) {
       case 'dots':
-        return <DotsVariant className={className} />
+        return <DotsVariant className={className || ''} />
       case 'pulse':
-        return <PulseVariant size={sizeClass} className={className} />
+        return <PulseVariant size={sizeClass} className={className || ''} />
       default:
-        return <SpinnerVariant size={sizeClass} className={className} />
+        return <SpinnerVariant size={sizeClass} className={className || ''} />
     }
   }
 

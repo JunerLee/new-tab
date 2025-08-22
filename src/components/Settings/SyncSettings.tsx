@@ -459,7 +459,7 @@ export function SyncSettings() {
         </button>
 
         <button
-          onClick={exportToFile}
+          onClick={() => exportToFile()}
           className="flex items-center justify-center space-x-2 p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
         >
           <Download className="w-5 h-5" />

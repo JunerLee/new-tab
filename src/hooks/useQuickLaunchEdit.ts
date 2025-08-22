@@ -130,6 +130,7 @@ interface UseQuickLaunchEditReturn {
   isDragging: boolean
   draggedItem: QuickLaunchItem | null
   dragOverIndex: number | null
+  consecutiveInteractions?: number
   
   // 交互方法
   handleItemPress: (item: QuickLaunchItem, event: React.MouseEvent | React.TouchEvent) => void
@@ -137,6 +138,7 @@ interface UseQuickLaunchEditReturn {
   handleItemClick: (item: QuickLaunchItem) => void
   enterEditMode: () => void
   exitEditMode: () => void
+  triggerSurpriseAnimation?: () => void
   
   // 拖拽方法
   handleDragStart: (item: QuickLaunchItem, event: React.DragEvent) => void

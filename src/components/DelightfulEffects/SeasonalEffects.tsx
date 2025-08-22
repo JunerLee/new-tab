@@ -118,8 +118,8 @@ export function SeasonalEffects({ isVisible = true, className = "" }: SeasonalEf
             {Array.from({ length: Math.floor(8 * getTimeBasedIntensity) }).map((_, i) => (
               <FloatingParticle
                 key={`particle-${i}`}
-                particle={specialEffects.particles[i % specialEffects.particles.length]}
-                color={specialEffects.colors[i % specialEffects.colors.length]}
+                particle={specialEffects.particles[i % specialEffects.particles.length] || '❄️'}
+                color={specialEffects.colors[i % specialEffects.colors.length] || '#ffffff'}
                 delay={i * 0.5}
                 intensity={getTimeBasedIntensity}
               />

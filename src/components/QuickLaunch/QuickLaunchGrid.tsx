@@ -1,12 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Edit, Trash2, ExternalLink, X } from 'lucide-react'
+import { Plus, Edit, ExternalLink, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@/stores/useAppStore'
 import { QuickLaunchItem } from '@/types'
 import { getDomainFromUrl, getFaviconUrl, cn, isValidUrl } from '@/utils'
 import { useQuickLaunchEdit } from '@/hooks/useQuickLaunchEdit'
-import { delightfulAnimations, celebrateSuccess, createRipple, shakeOnError } from '@/utils/delightfulAnimations'
 
 interface QuickLaunchItemProps {
   item: QuickLaunchItem
@@ -47,43 +46,82 @@ function QuickLaunchItemComponent({
 
   const faviconUrl = item.favicon || getFaviconUrl(getDomainFromUrl(item.url))
 
-  // 增强的iOS风格晃动动画 - 每个图标略有不同的节拍
+  // 增强的iOS风格晃动动画 - 每个图标有独特的晃动模式
   const wiggleAnimation = useMemo(() => {
-    // 为每个图标创建稍微不同的晃动模式
-    const randomOffset = (index * 0.1) % 1
-    const baseFrequency = 0.6 + randomOffset * 0.2
+    // 为每个图标创建自然的随机偏移
+    const seedA = (index * 17 + 1) % 7
+    const seedB = (index * 23 + 1) % 11
+    const phase = (index * 0.15) % (Math.PI * 2)
+    
+    // 不同的频率和幅度
+    const frequency = 1.2 + (seedA / 7) * 0.6 // 1.2 - 1.8秒
+    const amplitudeX = 1.0 + (seedB / 11) * 0.8 // 1.0 - 1.8px
+    const amplitudeY = 0.8 + (seedA / 7) * 0.6 // 0.8 - 1.4px
+    const rotateAmplitude = 0.5 + (seedB / 11) * 0.4 // 0.5 - 0.9度
     
     return {
-      x: [-1.5, 1.5, -1.2, 1.2, 0],
-      y: [-1.2, 1.2, -1.5, 1.5, 0],
-      rotate: [-0.8, 0.8, -0.6, 0.6, 0],
+      x: [
+        -amplitudeX, 
+        amplitudeX * 0.8, 
+        -amplitudeX * 0.6, 
+        amplitudeX * 0.9, 
+        0
+      ],
+      y: [
+        -amplitudeY * 0.7, 
+        amplitudeY, 
+        -amplitudeY * 0.9, 
+        amplitudeY * 0.6, 
+        0
+      ],
+      rotate: [
+        -rotateAmplitude, 
+        rotateAmplitude * 0.8, 
+        -rotateAmplitude * 0.6, 
+        rotateAmplitude, 
+        0
+      ],
       transition: {
-        duration: baseFrequency,
+        duration: frequency,
         repeat: Infinity,
         repeatType: "reverse" as const,
-        ease: "easeInOut",
-        // 性能优化：使用transform属性保证GPU加速
+        ease: [0.25, 0.46, 0.45, 0.94], // 自定义贝塞尔曲线，更自然
+        delay: phase * 0.1, // 相位偏移
         willChange: "transform"
       }
     }
   }, [index])
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    // 防止事件冒泡，特别是在编辑模式下
+    if (isEditMode) {
+      e.preventDefault()
+    }
     onPress(item, e)
   }
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    // 防止触摸事件引起页面滚动
+    if (isEditMode) {
+      e.preventDefault()
+    }
     onPress(item, e)
   }
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (_e: React.MouseEvent) => {
+    // 在编辑模式下，不立即打开链接
+    if (!isEditMode) {
+      onClick(item)
+    }
     onRelease()
-    onClick(item)
   }
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (_e: React.TouchEvent) => {
+    // 在编辑模式下，不立即打开链接
+    if (!isEditMode) {
+      onClick(item)
+    }
     onRelease()
-    onClick(item)
   }
 
   const handleDragStart = (e: React.DragEvent) => {
@@ -257,13 +295,10 @@ export function QuickLaunchGrid() {
     isDragging,
     draggedItem,
     dragOverIndex,
-    consecutiveInteractions,
     handleItemPress,
     handleItemRelease,
     handleItemClick,
-    enterEditMode,
     exitEditMode,
-    triggerSurpriseAnimation,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
@@ -273,34 +308,8 @@ export function QuickLaunchGrid() {
   // 时间感知动画 - 根据时间调整动画风格
   const currentHour = new Date().getHours()
   const isDayTime = currentHour >= 6 && currentHour < 18
-  const isGoldenHour = (currentHour >= 5 && currentHour <= 7) || (currentHour >= 17 && currentHour <= 19)
   
-  // 季节性惊喜检测
-  const currentDate = new Date()
-  const isSpecialDate = useMemo(() => {
-    const month = currentDate.getMonth() + 1
-    const day = currentDate.getDate()
-    
-    // 检测特殊日期
-    return (
-      (month === 12 && day === 25) || // 圣诞节
-      (month === 1 && day === 1) ||   // 新年
-      (month === 2 && day === 14) ||  // 情人节
-      (month === 10 && day === 31)    // 万圣节
-    )
-  }, [])
   
-  // 动态动画配置
-  const animationConfig = useMemo(() => {
-    return {
-      spring: {
-        type: "spring" as const,
-        stiffness: isDayTime ? 400 : 300,
-        damping: isDayTime ? 25 : 30
-      },
-      duration: isDayTime ? 0.3 : 0.4
-    }
-  }, [isDayTime])
 
   const sortedItems = [...quickLaunch].sort((a, b) => a.order - b.order)
 

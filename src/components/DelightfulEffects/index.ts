@@ -6,14 +6,7 @@
 // 季节性效果
 export { SeasonalEffects, useSeasonalEffects } from './SeasonalEffects'
 
-// 成就系统
-export { 
-  AchievementSystem,
-  defaultAchievements,
-  unlockAchievement,
-  updateAchievementProgress,
-  type Achievement
-} from './AchievementSystem'
+// 成就系统已移除
 
 // 重新导出动画工具
 export { 
@@ -25,10 +18,10 @@ export {
 
 // 组合式hooks
 export function useDelightfulEffects() {
-  const seasonalEffects = useSeasonalEffects()
+  // const seasonalEffects = useSeasonalEffects()
   
   return {
-    seasonalEffects,
+    // seasonalEffects,
     // 可以在这里添加更多组合逻辑
   }
 }
@@ -36,7 +29,7 @@ export function useDelightfulEffects() {
 // 效果配置类型
 export interface DelightfulEffectsConfig {
   enableSeasonalEffects: boolean
-  enableAchievements: boolean
+  // enableAchievements: boolean // 已移除
   enableSoundEffects: boolean
   enableHapticFeedback: boolean
   animationIntensity: 'low' | 'medium' | 'high'
@@ -46,7 +39,7 @@ export interface DelightfulEffectsConfig {
 // 默认配置
 export const defaultDelightfulConfig: DelightfulEffectsConfig = {
   enableSeasonalEffects: true,
-  enableAchievements: true,
+  // enableAchievements: true, // 已移除
   enableSoundEffects: true,
   enableHapticFeedback: true,
   animationIntensity: 'medium',

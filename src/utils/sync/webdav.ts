@@ -60,12 +60,12 @@ export class WebDAVClient {
   private async request(
     method: string,
     path: string,
-    body?: string,
+    body?: string | null,
     headers: Record<string, string> = {},
     retries: number = 0
   ): Promise<WebDAVResponse> {
     const url = `${this.baseUrl}${path}`
-    const requestHeaders = {
+    const requestHeaders: Record<string, string> = {
       'Authorization': this.auth,
       'User-Agent': 'NewTabExtension/1.0',
       'Accept-Encoding': 'gzip, deflate',
@@ -88,7 +88,7 @@ export class WebDAVClient {
       const response = await fetch(url, {
         method,
         headers: requestHeaders,
-        body,
+        body: body || null,
         signal: controller.signal
       })
 
@@ -119,7 +119,7 @@ export class WebDAVClient {
         data,
         headers: Object.fromEntries(response.headers.entries())
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.name === 'AbortError') {
         return {
           status: 0,
@@ -406,7 +406,7 @@ export class WebDAVClient {
       const xmlText = response.data as string
       const files = this.parseWebDAVResponse(xmlText)
       
-      return files.length > 0 ? files[0] : null
+      return files.length > 0 ? files[0] ?? null : null
     } catch (error) {
       console.error('获取文件信息失败:', error)
       return null
@@ -515,13 +515,12 @@ export class WebDAVSyncProvider {
       let latestTime = 0
 
       for (const file of files) {
-        if (file.endsWith('.json')) {
-          const info = await this.client.getFileInfo(file)
-          if (info?.lastModified && info.lastModified > latestTime) {
+        if (file.path.endsWith('.json')) {
+          if (file.lastModified && file.lastModified > latestTime) {
             // 如果指定了 deviceId，只考虑来自该设备的文件
-            if (!deviceId || file.includes(deviceId)) {
-              latestFile = file
-              latestTime = info.lastModified
+            if (!deviceId || file.path.includes(deviceId)) {
+              latestFile = file.path
+              latestTime = file.lastModified
             }
           }
         }
@@ -564,8 +563,8 @@ export class WebDAVSyncProvider {
       const devices = new Set<string>()
 
       for (const file of files) {
-        if (file.endsWith('.json')) {
-          const match = file.match(/sync_([^_]+)_\d+\.json$/)
+        if (file.path.endsWith('.json')) {
+          const match = file.path.match(/sync_([^_]+)_\d+\.json$/)
           if (match) {
             devices.add(match[1])
           }
@@ -588,10 +587,9 @@ export class WebDAVSyncProvider {
       const cutoffTime = Date.now() - (retentionDays * 24 * 60 * 60 * 1000)
 
       for (const file of files) {
-        if (file.endsWith('.json')) {
-          const info = await this.client.getFileInfo(file)
-          if (info?.lastModified && info.lastModified < cutoffTime) {
-            await this.client.deleteFile(file)
+        if (file.path.endsWith('.json')) {
+          if (file.lastModified && file.lastModified < cutoffTime) {
+            await this.client.deleteFile(file.path)
           }
         }
       }
