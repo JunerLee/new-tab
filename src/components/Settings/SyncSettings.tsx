@@ -293,9 +293,9 @@ export function SyncSettings() {
             <WifiOff className="w-5 h-5 text-gray-400" />
           )}
           <div>
-            <h4 className="font-medium">Enable Sync</h4>
+            <h4 className="font-medium">{t('settings.sync.enabled')}</h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Synchronize your data across devices
+              {t('settings.sync.enabled')}
             </p>
           </div>
         </div>
@@ -318,7 +318,7 @@ export function SyncSettings() {
             <div className="flex items-center space-x-3">
               <Clock className="w-5 h-5 text-blue-500" />
               <div>
-                <h4 className="font-medium">Auto Sync</h4>
+                <h4 className="font-medium">{t('settings.sync.autoSync')}</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Automatically sync every {syncSettings.syncInterval} minutes
                 </p>
@@ -338,7 +338,7 @@ export function SyncSettings() {
           {/* Sync interval */}
           {isAutoSyncEnabled && (
             <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <label className="block text-sm font-medium mb-2">Sync Interval (minutes)</label>
+              <label className="block text-sm font-medium mb-2">{t('settings.sync.syncInterval')} (分钟)</label>
               <input
                 type="number"
                 min="5"
@@ -378,7 +378,7 @@ export function SyncSettings() {
       {isEnabled && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium">Sync Providers</h4>
+            <h4 className="font-medium">{t('settings.sync.provider')}</h4>
             <button
               onClick={() => setShowWebDAVForm(true)}
               className="flex items-center space-x-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
@@ -455,7 +455,7 @@ export function SyncSettings() {
           className="flex items-center justify-center space-x-2 p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
-          <span>{isSyncing ? 'Syncing...' : 'Sync Now'}</span>
+          <span>{isSyncing ? t('settings.sync.actions.syncing') : t('settings.sync.actions.syncNow')}</span>
         </button>
 
         <button

@@ -4,21 +4,23 @@ import { X, Palette, Settings, Cloud, Download, Upload, RotateCcw } from 'lucide
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@/stores/useAppStore'
 import { cn } from '@/utils'
-// import { SyncSettings } from './SyncSettings' // Temporarily disabled due to syntax errors
+import { SyncSettings } from './SyncSettings'
 
-const TABS = [
-  { id: 'appearance', icon: Palette, label: 'Appearance' },
-  { id: 'general', icon: Settings, label: 'General' },
-  { id: 'sync', icon: Cloud, label: 'Sync' },
-  { id: 'backup', icon: Download, label: 'Backup' }
+const getTabs = (t: any) => [
+  { id: 'appearance', icon: Palette, label: t('settings.appearance.title') },
+  { id: 'general', icon: Settings, label: t('settings.general.title') },
+  { id: 'sync', icon: Cloud, label: t('settings.sync.title') },
+  { id: 'backup', icon: Download, label: t('settings.backup.title') }
 ] as const
 
-type TabId = typeof TABS[number]['id']
+type TabId = 'appearance' | 'general' | 'sync' | 'backup'
 
 export function SettingsModal() {
   const { t } = useTranslation()
   const { isSettingsOpen, setSettingsOpen, settings, updateSettings, resetToDefaults, exportData, importData } = useAppStore()
   const [activeTab, setActiveTab] = useState<TabId>('appearance')
+  
+  const TABS = getTabs(t)
 
   const handleClose = () => {
     setSettingsOpen(false)
@@ -203,13 +205,7 @@ export function SettingsModal() {
   )
 
   const renderSyncTab = () => (
-    <div className="p-8 text-center">
-      <div className="text-gray-500 dark:text-gray-400">
-        <Cloud className="w-12 h-12 mx-auto mb-4 opacity-50" />
-        <h3 className="text-lg font-medium mb-2">Sync Settings Temporarily Unavailable</h3>
-        <p className="text-sm">The sync settings panel is being fixed and will be available soon.</p>
-      </div>
-    </div>
+    <SyncSettings />
   )
 
   const renderBackupTab = () => (

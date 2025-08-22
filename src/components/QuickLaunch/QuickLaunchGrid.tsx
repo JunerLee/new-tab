@@ -46,56 +46,67 @@ function QuickLaunchItemComponent({
 
   const faviconUrl = item.favicon || getFaviconUrl(getDomainFromUrl(item.url))
 
-  // 增强的iOS风格晃动动画 - 每个图标有独特的晃动模式
+  // 超还原iOS风格晃动动画 - 精确模仿iOS 14+的图标编辑抖动
   const wiggleAnimation = useMemo(() => {
-    // 为每个图标创建自然的随机偏移
-    const seedA = (index * 17 + 1) % 7
-    const seedB = (index * 23 + 1) % 11
-    const phase = (index * 0.15) % (Math.PI * 2)
+    // 使用图标ID和索引作为随机种子，确保每个图标有独特且一致的抖动
+    const seed1 = (item.id.charCodeAt(0) + index * 13) % 17
+    const seed2 = (item.id.length * 7 + index * 19) % 23
+    const seed3 = (index * 31) % 11
     
-    // 不同的频率和幅度
-    const frequency = 1.2 + (seedA / 7) * 0.6 // 1.2 - 1.8秒
-    const amplitudeX = 1.0 + (seedB / 11) * 0.8 // 1.0 - 1.8px
-    const amplitudeY = 0.8 + (seedA / 7) * 0.6 // 0.8 - 1.4px
-    const rotateAmplitude = 0.5 + (seedB / 11) * 0.4 // 0.5 - 0.9度
+    // iOS风格的抖动参数
+    const baseFrequency = 1.8 + (seed1 / 17) * 0.8 // 1.8-2.6秒，iOS的典型频率
+    const xAmplitude = 1.2 + (seed2 / 23) * 1.0 // 1.2-2.2px 水平抖动
+    const yAmplitude = 0.8 + (seed3 / 11) * 0.8 // 0.8-1.6px 垂直抖动
+    const rotateAmplitude = 1.0 + (seed1 / 17) * 1.2 // 1.0-2.2度 旋转
+    const scaleAmplitude = 0.002 + (seed2 / 23) * 0.003 // 微小的缩放抖动
+    
+    // 相位偏移，让每个图标错开抖动时机
+    const phaseOffset = (seed3 / 11) * Math.PI * 2
     
     return {
       x: [
-        -amplitudeX, 
-        amplitudeX * 0.8, 
-        -amplitudeX * 0.6, 
-        amplitudeX * 0.9, 
+        0,
+        xAmplitude * Math.sin(phaseOffset),
+        -xAmplitude * Math.cos(phaseOffset + 0.5),
+        xAmplitude * 0.7 * Math.sin(phaseOffset + 1),
         0
       ],
       y: [
-        -amplitudeY * 0.7, 
-        amplitudeY, 
-        -amplitudeY * 0.9, 
-        amplitudeY * 0.6, 
+        0,
+        -yAmplitude * Math.cos(phaseOffset + 0.3),
+        yAmplitude * Math.sin(phaseOffset + 0.8),
+        -yAmplitude * 0.6 * Math.cos(phaseOffset + 1.3),
         0
       ],
       rotate: [
-        -rotateAmplitude, 
-        rotateAmplitude * 0.8, 
-        -rotateAmplitude * 0.6, 
-        rotateAmplitude, 
+        0,
+        rotateAmplitude * Math.sin(phaseOffset + 0.2),
+        -rotateAmplitude * 0.8 * Math.cos(phaseOffset + 0.7),
+        rotateAmplitude * 0.6 * Math.sin(phaseOffset + 1.2),
         0
       ],
+      scale: [
+        1,
+        1 + scaleAmplitude,
+        1 - scaleAmplitude * 0.5,
+        1 + scaleAmplitude * 0.7,
+        1
+      ],
       transition: {
-        duration: frequency,
+        duration: baseFrequency,
         repeat: Infinity,
-        repeatType: "reverse" as const,
-        ease: [0.25, 0.46, 0.45, 0.94], // 自定义贝塞尔曲线，更自然
-        delay: phase * 0.1, // 相位偏移
+        repeatType: "loop" as const,
+        ease: [0.25, 0.46, 0.45, 0.94], // iOS的经典缓动曲线
+        times: [0, 0.25, 0.5, 0.75, 1], // 控制关键帧时间
         willChange: "transform"
       }
     }
-  }, [index])
+  }, [index, item.id])
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    // 防止事件冒泡，特别是在编辑模式下
+    // 在编辑模式下，允许拖拽事件通过，但阻止冒泡
     if (isEditMode) {
-      e.preventDefault()
+      e.stopPropagation()
     }
     onPress(item, e)
   }
@@ -142,7 +153,7 @@ function QuickLaunchItemComponent({
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{
         opacity: 1,
-        scale: isEditing ? 1.02 : isDragOver ? 1.1 : 1,
+        scale: isEditing ? 1.02 : isDragOver ? 1.08 : isDragging ? 0.95 : 1,
         ...((isEditMode && !isDragging) ? wiggleAnimation : {})
       }}
       // 性能优化配置
@@ -152,7 +163,7 @@ function QuickLaunchItemComponent({
       className={cn(
         "relative group select-none",
         isDragOver && "z-10",
-        isDragging && "opacity-50"
+        isDragging && "opacity-30 z-20"
       )}
     >
       <div

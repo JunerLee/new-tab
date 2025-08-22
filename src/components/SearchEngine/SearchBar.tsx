@@ -44,7 +44,7 @@ export function SearchBar() {
     >
       <form onSubmit={handleSearch} className="relative">
         {/* Search Engine Selector */}
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
           <div className="relative">
             <button
               type="button"
@@ -119,7 +119,7 @@ export function SearchBar() {
             onBlur={() => setSearchFocused(false)}
             placeholder={currentEngine.placeholder || t('search.placeholder')}
             className={cn(
-              "w-full h-16 pl-36 pr-16 rounded-2xl",
+              "w-full h-16 pl-40 pr-16 rounded-2xl",
               "search-input text-lg"
             )}
           />
