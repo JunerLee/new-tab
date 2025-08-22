@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom'
-import 'jest-webextension-mock'
 
 // Mock chrome APIs
 Object.assign(global, {
