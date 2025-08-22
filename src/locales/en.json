@@ -13,6 +13,7 @@
     "addNew": "Add New Site",
     "edit": "Edit",
     "delete": "Delete",
+    "editMode": "Edit Mode (Long press to edit)",
     "categories": {
       "all": "All",
       "development": "Development",
@@ -85,6 +86,7 @@
     "success": "Success",
     "name": "Name",
     "url": "URL",
-    "category": "Category"
+    "category": "Category",
+    "done": "Done"
   }
 }

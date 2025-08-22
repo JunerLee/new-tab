@@ -233,6 +233,83 @@
     ), var(--neuma-bg-dark);
   }
   
+  /* iOS风格编辑模式样式 */
+  .quick-launch-edit-mode {
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .quick-launch-edit-mode .quick-launch-item {
+    @apply relative;
+    transform-origin: center center;
+  }
+  
+  .quick-launch-wiggle {
+    animation: wiggle 0.6s ease-in-out infinite alternate;
+  }
+  
+  @keyframes wiggle {
+    0% { 
+      transform: rotate(-0.5deg) translateY(-1px); 
+    }
+    25% { 
+      transform: rotate(0.5deg) translateX(1px); 
+    }
+    50% { 
+      transform: rotate(-0.3deg) translateY(1px); 
+    }
+    75% { 
+      transform: rotate(0.3deg) translateX(-1px); 
+    }
+    100% { 
+      transform: rotate(-0.2deg) translateY(-0.5px); 
+    }
+  }
+  
+  /* 编辑模式按钮样式 */
+  .edit-control-button {
+    @apply absolute w-6 h-6 rounded-full flex items-center justify-center;
+    @apply text-white text-xs font-bold shadow-lg z-20;
+    @apply transition-all duration-200 ease-out;
+    @apply transform-gpu;
+  }
+  
+  .edit-control-button:hover {
+    @apply scale-110;
+  }
+  
+  .edit-control-button:active {
+    @apply scale-95;
+  }
+  
+  /* 拖拽状态样式 */
+  .quick-launch-dragging {
+    @apply opacity-50 scale-95;
+    @apply pointer-events-none;
+    @apply z-50;
+  }
+  
+  .quick-launch-drag-over {
+    @apply scale-110 ring-2 ring-green-400 ring-opacity-70;
+    @apply shadow-float dark:shadow-float-dark;
+    @apply z-10;
+  }
+  
+  /* 长按反馈动画 */
+  .quick-launch-pressing {
+    @apply scale-95;
+    @apply shadow-inset-sm dark:shadow-inset-sm-dark;
+  }
+  
+  /* 确保触摸设备上的交互 */
+  @media (hover: none) and (pointer: coarse) {
+    .quick-launch-item {
+      @apply select-none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+
   /* ===========================================
      滑块和开关系统
      =========================================== */
@@ -399,5 +476,120 @@
     content: '✓';
     @apply absolute inset-0 flex items-center justify-center;
     @apply text-claude-gray-700 dark:text-claude-gray-300 text-sm font-bold;
+  }
+}
+
+/* ===========================================
+   特殊效果和彩蛋功能
+   =========================================== */
+
+/* 彩虹背景动画 */
+@keyframes rainbowBackground {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.rainbow-bg {
+  background: linear-gradient(
+    45deg,
+    #ff6b6b,
+    #ffa500,
+    #ffff00,
+    #32cd32,
+    #1e90ff,
+    #9370db,
+    #ff6b6b
+  );
+  background-size: 400% 400%;
+  animation: rainbowBackground 5s ease infinite;
+}
+
+/* 星空背景效果 */
+.starry-bg {
+  background: radial-gradient(2px 2px at 40% 30%, #fff, transparent),
+              radial-gradient(2px 2px at 80% 60%, #fff, transparent),
+              radial-gradient(1px 1px at 20% 80%, #fff, transparent),
+              radial-gradient(1px 1px at 90% 10%, #fff, transparent),
+              radial-gradient(2px 2px at 60% 20%, #fff, transparent);
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* 粒子效果容器 */
+.particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* 单个粒子样式 */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 心形粒子（特殊日期使用） */
+.heart-particle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+
+.heart-particle::before,
+.heart-particle::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0;
+  width: 6px;
+  height: 10px;
+  background: #ff69b4;
+  border-radius: 6px 6px 0 0;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+
+.heart-particle::after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+/* 成功反馈动画 */
+.success-ripple {
+  position: absolute;
+  border: 2px solid #10b981;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+    margin: -20px;
   }
 }

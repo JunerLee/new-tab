@@ -13,6 +13,7 @@
     "addNew": "添加新网站",
     "edit": "编辑",
     "delete": "删除",
+    "editMode": "编辑模式（长按图标进入编辑）",
     "categories": {
       "all": "全部",
       "development": "开发",
@@ -70,6 +71,61 @@
         "latest": "使用最新版本",
         "merge": "智能合并",
         "manual": "手动解决"
+      },
+      "webdavConfig": {
+        "title": "添加 WebDAV 提供商",
+        "providerName": "提供商名称",
+        "url": "WebDAV URL",
+        "username": "用户名",
+        "password": "密码",
+        "token": "访问令牌",
+        "path": "同步路径",
+        "authMethod": "认证方式",
+        "authPassword": "用户名密码",
+        "authToken": "访问令牌",
+        "advancedOptions": "高级选项",
+        "timeout": "超时时间",
+        "retryAttempts": "重试次数",
+        "compression": "启用数据压缩",
+        "connectionSuccess": "连接成功！",
+        "connectionFailed": "连接失败，请检查配置",
+        "addProvider": "添加提供商",
+        "testing": "测试中...",
+        "placeholders": {
+          "providerName": "我的 WebDAV 服务器",
+          "url": "https://your-server.com/remote.php/dav/files/username",
+          "path": "/newTab",
+          "token": "Bearer token 或应用密码"
+        },
+        "help": {
+          "token": "适用于 Nextcloud 应用密码等",
+          "path": "数据将存储在此路径下"
+        }
+      },
+      "stats": {
+        "totalSyncs": "总同步次数",
+        "successRate": "成功率",
+        "lastSync": "上次同步",
+        "dataSize": "数据大小",
+        "never": "从未"
+      },
+      "actions": {
+        "syncNow": "立即同步",
+        "syncing": "同步中...",
+        "export": "导出",
+        "import": "导入"
+      },
+      "history": {
+        "title": "同步历史",
+        "show": "显示",
+        "hide": "隐藏",
+        "clear": "清除",
+        "empty": "暂无同步历史",
+        "actions": {
+          "sync": "同步",
+          "export": "导出",
+          "import": "导入"
+        }
       }
     },
     "backup": {
@@ -109,6 +165,7 @@
     "confirm": "确认",
     "back": "返回",
     "next": "下一步",
+    "done": "完成",
     "previous": "上一步",
     "retry": "重试",
     "refresh": "刷新"
@@ -120,7 +177,17 @@
     "importFailed": "导入失败",
     "exportFailed": "导出失败",
     "connectionFailed": "连接失败",
-    "unknownError": "未知错误"
+    "unknownError": "未知错误",
+    "webdav": {
+      "authFailed": "认证失败，请检查用户名和密码",
+      "forbidden": "访问被拒绝，请检查权限设置",
+      "notFound": "文件或目录不存在",
+      "conflict": "操作冲突，可能目录已存在",
+      "timeout": "请求超时",
+      "serverError": "服务器错误",
+      "insufficientStorage": "存储空间不足",
+      "resourceLocked": "资源被锁定"
+    }
   },
   "messages": {
     "welcomeMessage": "欢迎使用新标签页！",
@@ -129,6 +196,16 @@
     "syncComplete": "同步完成",
     "configSaved": "配置已保存",
     "dataExported": "数据已导出",
-    "dataImported": "数据已导入"
+    "dataImported": "数据已导入",
+    "sync": {
+      "uploadSuccess": "数据上传成功",
+      "downloadSuccess": "数据下载成功",
+      "noSyncData": "未找到同步数据",
+      "conflictDetected": "检测到数据冲突",
+      "conflictResolved": "冲突已解决",
+      "initializationFailed": "WebDAV 初始化失败",
+      "providerConfigured": "同步提供商配置成功",
+      "cleanupComplete": "清理完成"
+    }
   }
 }

@@ -21,6 +21,7 @@ import {
   Clock,
   Shield
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useSync } from '@/hooks/useSync'
 import { WebDAVConfig } from '@/types/sync'
 
@@ -28,6 +29,7 @@ import { WebDAVConfig } from '@/types/sync'
  * Sync settings component for managing data synchronization features
  */
 export function SyncSettings() {
+  const { t } = useTranslation()
   const {
     syncState,
     syncSettings,
@@ -58,11 +60,18 @@ export function SyncSettings() {
     url: '',
     username: '',
     password: '',
-    path: '/newTab'
+    token: '',
+    path: '/newTab',
+    timeout: 30000,
+    compressionEnabled: true,
+    retryAttempts: 3,
+    retryDelay: 1000
   })
   const [webdavName, setWebDAVName] = useState('')
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle')
   const [connectionError, setConnectionError] = useState('')
+  const [connectionDetails, setConnectionDetails] = useState<any>(null)
+  const [authMethod, setAuthMethod] = useState<'password' | 'token'>('password')
   const [showHistory, setShowHistory] = useState(false)
   const [importResult, setImportResult] = useState<{ success: boolean; message: string } | null>(null)
 
@@ -75,8 +84,15 @@ export function SyncSettings() {
         url: '',
         username: '',
         password: '',
-        path: '/newTab'
+        token: '',
+        path: '/newTab',
+        timeout: 30000,
+        compressionEnabled: true,
+        retryAttempts: 3,
+        retryDelay: 1000
       })
+      setAuthMethod('password')
+      setConnectionDetails(null)
       setWebDAVName('')
       setConnectionStatus('idle')
       setConnectionError('')
@@ -87,26 +103,48 @@ export function SyncSettings() {
    * Test WebDAV connection
    */
   const handleTestConnection = async () => {
-    if (!webdavConfig.url || !webdavConfig.username || !webdavConfig.password) {
-      setConnectionError('Please fill in all required fields')
+    // 验证必填字段
+    if (!webdavConfig.url || !webdavConfig.username) {
+      setConnectionError('请填写URL和用户名')
+      setConnectionStatus('error')
+      return
+    }
+    
+    if (authMethod === 'password' && !webdavConfig.password) {
+      setConnectionError('请填写密码')
+      setConnectionStatus('error')
+      return
+    }
+    
+    if (authMethod === 'token' && !webdavConfig.token) {
+      setConnectionError('请填写访问令牌')
       setConnectionStatus('error')
       return
     }
 
     setConnectionStatus('testing')
     setConnectionError('')
+    setConnectionDetails(null)
 
     try {
-      const success = await testWebDAVConnection(webdavConfig)
+      // 根据认证方式设置配置
+      const configToTest = {
+        ...webdavConfig,
+        password: authMethod === 'password' ? webdavConfig.password : '',
+        token: authMethod === 'token' ? webdavConfig.token : ''
+      }
+      
+      const success = await testWebDAVConnection(configToTest)
       if (success) {
         setConnectionStatus('success')
+        // TODO: 获取连接详情（需要扩展testWebDAVConnection函数）
       } else {
         setConnectionStatus('error')
-        setConnectionError('Connection failed. Please check your credentials and URL.')
+        setConnectionError('连接失败，请检查URL和认证信息')
       }
     } catch (error) {
       setConnectionStatus('error')
-      setConnectionError(error instanceof Error ? error.message : 'Connection failed')
+      setConnectionError(error instanceof Error ? error.message : '连接失败')
     }
   }
 
@@ -114,17 +152,34 @@ export function SyncSettings() {
    * Add WebDAV provider
    */
   const handleAddWebDAV = () => {
-    if (!webdavName || !webdavConfig.url || !webdavConfig.username || !webdavConfig.password) {
-      setConnectionError('Please fill in all required fields')
+    if (!webdavName || !webdavConfig.url || !webdavConfig.username) {
+      setConnectionError('请填写所有必填字段')
+      return
+    }
+    
+    if (authMethod === 'password' && !webdavConfig.password) {
+      setConnectionError('请填写密码')
+      return
+    }
+    
+    if (authMethod === 'token' && !webdavConfig.token) {
+      setConnectionError('请填写访问令牌')
       return
     }
 
     if (connectionStatus !== 'success') {
-      setConnectionError('Please test connection first')
+      setConnectionError('请先测试连接')
       return
     }
 
-    addWebDAVProvider(webdavName, webdavConfig)
+    // 根据认证方式设置配置
+    const configToSave = {
+      ...webdavConfig,
+      password: authMethod === 'password' ? webdavConfig.password : '',
+      token: authMethod === 'token' ? webdavConfig.token : ''
+    }
+    
+    addWebDAVProvider(webdavName, configToSave)
     setShowWebDAVForm(false)
   }
 
@@ -186,9 +241,9 @@ export function SyncSettings() {
         <div className="flex items-center space-x-3">
           <Cloud className="w-6 h-6 text-blue-500" />
           <div>
-            <h3 className="text-lg font-semibold">Sync Settings</h3>
+            <h3 className="text-lg font-semibold">{t('settings.sync.title')}</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Keep your data synchronized across devices
+              跨设备同步您的数据
             </p>
           </div>
         </div>
@@ -208,23 +263,23 @@ export function SyncSettings() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-500">{syncStats.totalSyncs}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total Syncs</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('settings.sync.stats.totalSyncs')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-500">{syncStats.successRate.toFixed(1)}%</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Success Rate</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('settings.sync.stats.successRate')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-500">
-              {syncStats.lastSync ? formatTimestamp(syncStats.lastSync).split(' ')[0] : 'Never'}
+              {syncStats.lastSync ? formatTimestamp(syncStats.lastSync).split(' ')[0] : t('settings.sync.stats.never')}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Last Sync</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('settings.sync.stats.lastSync')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-orange-500">
               {formatFileSize(syncStats.totalDataSize)}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Data Size</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('settings.sync.stats.dataSize')}</div>
           </div>
         </div>
       </div>
@@ -548,18 +603,60 @@ export function SyncSettings() {
                 />
               </div>
 
+              {/* 认证方式选择 */}
               <div>
-                <label className="block text-sm font-medium mb-1">Password</label>
-                <input
-                  type="password"
-                  value={webdavConfig.password}
-                  onChange={(e) => setWebDAVConfig(prev => ({ ...prev, password: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700"
-                />
+                <label className="block text-sm font-medium mb-1">认证方式</label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      value="password"
+                      checked={authMethod === 'password'}
+                      onChange={(e) => setAuthMethod(e.target.value as 'password' | 'token')}
+                      className="mr-2"
+                    />
+                    用户名密码
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      value="token"
+                      checked={authMethod === 'token'}
+                      onChange={(e) => setAuthMethod(e.target.value as 'password' | 'token')}
+                      className="mr-2"
+                    />
+                    访问令牌
+                  </label>
+                </div>
               </div>
 
+              {/* 密码或令牌输入 */}
+              {authMethod === 'password' ? (
+                <div>
+                  <label className="block text-sm font-medium mb-1">密码</label>
+                  <input
+                    type="password"
+                    value={webdavConfig.password}
+                    onChange={(e) => setWebDAVConfig(prev => ({ ...prev, password: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-sm font-medium mb-1">访问令牌</label>
+                  <input
+                    type="password"
+                    value={webdavConfig.token}
+                    onChange={(e) => setWebDAVConfig(prev => ({ ...prev, token: e.target.value }))}
+                    placeholder="Bearer token 或应用密码"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">适用于Nextcloud应用密码等</p>
+                </div>
+              )}
+
               <div>
-                <label className="block text-sm font-medium mb-1">Path (optional)</label>
+                <label className="block text-sm font-medium mb-1">同步路径 (可选)</label>
                 <input
                   type="text"
                   value={webdavConfig.path}
@@ -567,7 +664,51 @@ export function SyncSettings() {
                   placeholder="/newTab"
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700"
                 />
+                <p className="text-xs text-gray-500 mt-1">数据将存储在此路径下</p>
               </div>
+
+              {/* 高级选项 */}
+              <details className="group">
+                <summary className="cursor-pointer text-sm font-medium text-blue-600 dark:text-blue-400">
+                  高级选项
+                </summary>
+                <div className="mt-3 space-y-3 pl-4 border-l-2 border-blue-200 dark:border-blue-700">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium mb-1">超时时间 (秒)</label>
+                      <input
+                        type="number"
+                        min="5"
+                        max="300"
+                        value={Math.floor((webdavConfig.timeout || 30000) / 1000)}
+                        onChange={(e) => setWebDAVConfig(prev => ({ ...prev, timeout: parseInt(e.target.value) * 1000 }))}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium mb-1">重试次数</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="10"
+                        value={webdavConfig.retryAttempts || 3}
+                        onChange={(e) => setWebDAVConfig(prev => ({ ...prev, retryAttempts: parseInt(e.target.value) }))}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="compression"
+                      checked={webdavConfig.compressionEnabled !== false}
+                      onChange={(e) => setWebDAVConfig(prev => ({ ...prev, compressionEnabled: e.target.checked }))}
+                      className="rounded"
+                    />
+                    <label htmlFor="compression" className="text-xs">启用数据压缩</label>
+                  </div>
+                </div>
+              </details>
 
               {connectionError && (
                 <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">

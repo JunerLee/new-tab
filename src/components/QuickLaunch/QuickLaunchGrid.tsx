@@ -1,93 +1,210 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Edit, Trash2, ExternalLink, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@/stores/useAppStore'
 import { QuickLaunchItem } from '@/types'
 import { getDomainFromUrl, getFaviconUrl, cn, isValidUrl } from '@/utils'
+import { useQuickLaunchEdit } from '@/hooks/useQuickLaunchEdit'
+import { delightfulAnimations, celebrateSuccess, createRipple, shakeOnError } from '@/utils/delightfulAnimations'
 
 interface QuickLaunchItemProps {
   item: QuickLaunchItem
+  index: number
+  isEditMode: boolean
+  isEditing: boolean
+  isDragging: boolean
+  isDragOver: boolean
   onEdit: (item: QuickLaunchItem) => void
   onDelete: (id: string) => void
+  onPress: (item: QuickLaunchItem, event: React.MouseEvent | React.TouchEvent) => void
+  onRelease: () => void
+  onClick: (item: QuickLaunchItem) => void
+  onDragStart: (item: QuickLaunchItem, event: React.DragEvent) => void
+  onDragOver: (index: number, event: React.DragEvent) => void
+  onDragEnd: () => void
+  onDrop: (index: number, event: React.DragEvent) => void
 }
 
-function QuickLaunchItemComponent({ item, onEdit, onDelete }: QuickLaunchItemProps) {
-  const [isHovered, setIsHovered] = useState(false)
+function QuickLaunchItemComponent({ 
+  item, 
+  index,
+  isEditMode, 
+  isEditing,
+  isDragging,
+  isDragOver,
+  onEdit, 
+  onDelete,
+  onPress,
+  onRelease,
+  onClick,
+  onDragStart,
+  onDragOver,
+  onDragEnd,
+  onDrop
+}: QuickLaunchItemProps) {
   const [imageError, setImageError] = useState(false)
 
   const faviconUrl = item.favicon || getFaviconUrl(getDomainFromUrl(item.url))
 
-  const handleClick = () => {
-    window.open(item.url, '_blank')
+  // 增强的iOS风格晃动动画 - 每个图标略有不同的节拍
+  const wiggleAnimation = useMemo(() => {
+    // 为每个图标创建稍微不同的晃动模式
+    const randomOffset = (index * 0.1) % 1
+    const baseFrequency = 0.6 + randomOffset * 0.2
+    
+    return {
+      x: [-1.5, 1.5, -1.2, 1.2, 0],
+      y: [-1.2, 1.2, -1.5, 1.5, 0],
+      rotate: [-0.8, 0.8, -0.6, 0.6, 0],
+      transition: {
+        duration: baseFrequency,
+        repeat: Infinity,
+        repeatType: "reverse" as const,
+        ease: "easeInOut",
+        // 性能优化：使用transform属性保证GPU加速
+        willChange: "transform"
+      }
+    }
+  }, [index])
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    onPress(item, e)
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    onPress(item, e)
+  }
+
+  const handleMouseUp = () => {
+    onRelease()
+    onClick(item)
+  }
+
+  const handleTouchEnd = () => {
+    onRelease()
+    onClick(item)
+  }
+
+  const handleDragStart = (e: React.DragEvent) => {
+    onDragStart(item, e)
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    onDragOver(index, e)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    onDrop(index, e)
   }
 
   return (
     <motion.div
       layout
       initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
+      animate={{
+        opacity: 1,
+        scale: isEditing ? 1.02 : isDragOver ? 1.1 : 1,
+        ...((isEditMode && !isDragging) ? wiggleAnimation : {})
+      }}
+      // 性能优化配置
+      style={{ willChange: isEditMode ? 'transform' : 'auto' }}
       exit={{ opacity: 0, scale: 0.8 }}
-      whileHover={{ scale: 1.05 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="relative group"
+      whileHover={!isEditMode ? { scale: 1.05 } : {}}
+      className={cn(
+        "relative group select-none",
+        isDragOver && "z-10",
+        isDragging && "opacity-50"
+      )}
     >
       <div
-        onClick={handleClick}
+        draggable={isEditMode}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={onDragEnd}
+        onDrop={handleDrop}
         className={cn(
-          "quick-launch-item relative overflow-hidden",
-          "cursor-pointer"
+          "quick-launch-item relative overflow-hidden transition-all duration-300",
+          "cursor-pointer touch-manipulation",
+          isEditMode && "shadow-float dark:shadow-float-dark",
+          isEditing && "ring-2 ring-blue-400 ring-opacity-50",
+          isDragOver && "ring-2 ring-green-400 ring-opacity-70 scale-110"
         )}
+        style={{
+          transformOrigin: 'center center',
+          transform: isEditing ? 'scale(1.02)' : undefined,
+          // 性能优化：使用GPU图层
+          willChange: isEditMode ? 'transform, opacity' : 'auto',
+          // 硬件加速
+          backfaceVisibility: 'hidden' as const,
+          WebkitBackfaceVisibility: 'hidden',
+          perspective: 1000
+        }}
       >
-        <div className="icon-wrapper">
+        <div className="icon-wrapper transition-transform duration-200">
           {!imageError ? (
             <img
               src={faviconUrl}
               alt={item.name}
-              className="w-6 h-6"
+              className="w-6 h-6 pointer-events-none"
               onError={() => setImageError(true)}
+              draggable={false}
             />
           ) : (
-            <ExternalLink className="w-5 h-5 text-claude-gray-500" />
+            <ExternalLink className="w-5 h-5 text-claude-gray-500 pointer-events-none" />
           )}
         </div>
 
+        {/* 编辑模式控制按钮 */}
         <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/20 dark:bg-black/40 flex items-center justify-center gap-1"
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onEdit(item)
-                }}
-                className="p-1 rounded bg-white/90 dark:bg-black/90 text-claude-gray-700 dark:text-claude-gray-300 hover:bg-white dark:hover:bg-black transition-colors"
-              >
-                <Edit className="w-3 h-3" />
-              </button>
+          {isEditMode && (
+            <>
+              {/* 删除按钮 - 左上角 */}
               {item.isCustom && (
-                <button
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  transition={{ delay: 0.1 }}
                   onClick={(e) => {
                     e.stopPropagation()
                     onDelete(item.id)
                   }}
-                  className="p-1 rounded bg-red-500/90 text-white hover:bg-red-500 transition-colors"
+                  className="absolute -top-2 -left-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg z-20 transition-colors"
                 >
-                  <Trash2 className="w-3 h-3" />
-                </button>
+                  ×
+                </motion.button>
               )}
-            </motion.div>
+              
+              {/* 编辑按钮 - 右上角 */}
+              <motion.button
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ delay: 0.15 }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onEdit(item)
+                }}
+                className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg z-20 transition-colors"
+              >
+                <Edit className="w-3 h-3" />
+              </motion.button>
+            </>
           )}
         </AnimatePresence>
       </div>
 
       <div className="mt-2 text-center">
-        <div className="text-xs font-medium text-claude-gray-700 dark:text-claude-gray-300 truncate px-1">
+        <div className={cn(
+          "text-xs font-medium truncate px-1 transition-colors duration-200",
+          "text-claude-gray-700 dark:text-claude-gray-300",
+          isEditMode && "text-claude-gray-600 dark:text-claude-gray-400"
+        )}>
           {item.name}
         </div>
       </div>
@@ -127,13 +244,94 @@ function AddItemButton({ onClick }: AddItemButtonProps) {
 
 export function QuickLaunchGrid() {
   const { t } = useTranslation()
-  const { quickLaunch, removeQuickLaunchItem, addQuickLaunchItem, updateQuickLaunchItem } = useAppStore()
+  const { quickLaunch, removeQuickLaunchItem, addQuickLaunchItem, updateQuickLaunchItem, reorderQuickLaunch } = useAppStore()
   const [editingItem, setEditingItem] = useState<QuickLaunchItem | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [formData, setFormData] = useState({ name: '', url: '', category: 'productivity' })
   const [formErrors, setFormErrors] = useState({ name: '', url: '' })
+  
+  const {
+    isEditMode,
+    editingItemId,
+    longPressTimer,
+    isDragging,
+    draggedItem,
+    dragOverIndex,
+    consecutiveInteractions,
+    handleItemPress,
+    handleItemRelease,
+    handleItemClick,
+    enterEditMode,
+    exitEditMode,
+    triggerSurpriseAnimation,
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    handleDrop,
+  } = useQuickLaunchEdit()
+  
+  // 时间感知动画 - 根据时间调整动画风格
+  const currentHour = new Date().getHours()
+  const isDayTime = currentHour >= 6 && currentHour < 18
+  const isGoldenHour = (currentHour >= 5 && currentHour <= 7) || (currentHour >= 17 && currentHour <= 19)
+  
+  // 季节性惊喜检测
+  const currentDate = new Date()
+  const isSpecialDate = useMemo(() => {
+    const month = currentDate.getMonth() + 1
+    const day = currentDate.getDate()
+    
+    // 检测特殊日期
+    return (
+      (month === 12 && day === 25) || // 圣诞节
+      (month === 1 && day === 1) ||   // 新年
+      (month === 2 && day === 14) ||  // 情人节
+      (month === 10 && day === 31)    // 万圣节
+    )
+  }, [])
+  
+  // 动态动画配置
+  const animationConfig = useMemo(() => {
+    return {
+      spring: {
+        type: "spring" as const,
+        stiffness: isDayTime ? 400 : 300,
+        damping: isDayTime ? 25 : 30
+      },
+      duration: isDayTime ? 0.3 : 0.4
+    }
+  }, [isDayTime])
 
   const sortedItems = [...quickLaunch].sort((a, b) => a.order - b.order)
+
+  // 点击外部区域退出编辑模式
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (isEditMode && !target.closest('.quick-launch-item') && !target.closest('.modal-surface')) {
+        exitEditMode()
+      }
+    }
+
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isEditMode) {
+        exitEditMode()
+      }
+    }
+
+    if (isEditMode) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleEscKey)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscKey)
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current)
+      }
+    }
+  }, [isEditMode, exitEditMode, longPressTimer])
 
   const handleEdit = (item: QuickLaunchItem) => {
     setEditingItem(item)
@@ -143,6 +341,35 @@ export function QuickLaunchGrid() {
       category: item.category || 'productivity'
     })
     setFormErrors({ name: '', url: '' })
+  }
+
+  const handleReorder = (sourceIndex: number, targetIndex: number) => {
+    if (sourceIndex === targetIndex) return
+    
+    const newItems = [...sortedItems]
+    const [movedItem] = newItems.splice(sourceIndex, 1)
+    newItems.splice(targetIndex, 0, movedItem)
+    
+    // 重新分配order值
+    const reorderedItems = newItems.map((item, index) => ({
+      ...item,
+      order: index
+    }))
+    
+    reorderQuickLaunch(reorderedItems)
+  }
+
+  const handleItemDrop = (targetIndex: number, event: React.DragEvent) => {
+    event.preventDefault()
+    
+    if (!draggedItem) return
+    
+    const sourceIndex = sortedItems.findIndex(item => item.id === draggedItem.id)
+    if (sourceIndex !== -1) {
+      handleReorder(sourceIndex, targetIndex)
+    }
+    
+    handleDrop(targetIndex, event)
   }
 
   const handleDelete = (id: string) => {
@@ -220,18 +447,53 @@ export function QuickLaunchGrid() {
         <div className="w-16 h-0.5 bg-gradient-to-r from-claude-gray-300 to-transparent dark:from-claude-gray-600 mx-auto" />
       </div>
 
-      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-4 sm:gap-5 md:gap-6">
+      {/* 编辑模式提示 */}
+      <AnimatePresence>
+        {isEditMode && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mb-4 text-center"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
+              <span>📱</span>
+              <span>{t('quickLaunch.editMode')}</span>
+              <button
+                onClick={exitEditMode}
+                className="ml-2 px-2 py-1 bg-blue-200 dark:bg-blue-800 hover:bg-blue-300 dark:hover:bg-blue-700 rounded text-xs transition-colors"
+              >
+                {t('common.done')}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-6 sm:gap-7 md:gap-8">
         <AnimatePresence mode="popLayout">
-          {sortedItems.map((item) => (
+          {sortedItems.map((item, index) => (
             <QuickLaunchItemComponent
               key={item.id}
               item={item}
+              index={index}
+              isEditMode={isEditMode}
+              isEditing={editingItemId === item.id}
+              isDragging={isDragging && draggedItem?.id === item.id}
+              isDragOver={dragOverIndex === index}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onPress={handleItemPress}
+              onRelease={handleItemRelease}
+              onClick={handleItemClick}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragEnd={handleDragEnd}
+              onDrop={handleItemDrop}
             />
           ))}
           
-          <AddItemButton onClick={handleAddNew} />
+          {!isEditMode && <AddItemButton onClick={handleAddNew} />}
         </AnimatePresence>
       </div>
 

@@ -19,8 +19,12 @@ export interface WebDAVConfig {
   url: string
   username: string
   password: string
+  token?: string // 支持token认证
   path?: string
   timeout?: number
+  compressionEnabled?: boolean // 是否启用压缩
+  retryAttempts?: number // 重试次数
+  retryDelay?: number // 重试延迟（毫秒）
 }
 
 export interface SyncState {
@@ -56,6 +60,9 @@ export interface WebDAVResponse {
   status: number
   data?: any
   error?: string
+  errorType?: string // 错误类型
+  headers?: Record<string, string> // 响应头
+  responseTime?: number // 响应时间
 }
 
 export interface LocalSyncData {
