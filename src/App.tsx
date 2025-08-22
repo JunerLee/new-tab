@@ -60,7 +60,7 @@ function App() {
           transition={{ delay: 1 }}
           onClick={handleSettingsClick}
           className={cn(
-            "fixed top-6 right-6 z-10",
+            "fixed top-6 right-6 z-30", /* 提高z-index避免被其他元素覆盖 */
             "w-14 h-14 rounded-2xl", /* 更大更圆润 */
             "neumorphic-button", /* 使用新的拟物化按钮样式 */
             "flex items-center justify-center",
@@ -101,8 +101,7 @@ function App() {
             </div>
           </div>
 
-          {/* Footer - 留空以保持布局结构，但移除文字内容实现更沉浸的体验 */}
-          <div className="py-6" />
+          {/* Footer完全移除，实现更沉浸的体验 */}
         </div>
 
         {/* Settings modal */}

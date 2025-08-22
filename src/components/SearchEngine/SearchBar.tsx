@@ -14,7 +14,7 @@ export function SearchBar() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const allEngines = [...DEFAULT_SEARCH_ENGINES, ...customSearchEngines]
-  const currentEngine = allEngines.find(engine => engine.id === settings.searchEngine) || DEFAULT_SEARCH_ENGINES[0]
+  const currentEngine = allEngines.find(engine => engine.id === settings.searchEngine) || DEFAULT_SEARCH_ENGINES[0]!
 
   useEffect(() => {
     if (searchFocused && inputRef.current) {
@@ -44,7 +44,7 @@ export function SearchBar() {
     >
       <form onSubmit={handleSearch} className="relative">
         {/* Search Engine Selector */}
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
           <div className="relative">
             <button
               type="button"
@@ -108,7 +108,7 @@ export function SearchBar() {
         </div>
 
         {/* Search Input */}
-        <div className="relative">
+        <div className="relative p-1">
           <input
             ref={inputRef}
             type="text"
@@ -118,7 +118,7 @@ export function SearchBar() {
             onBlur={() => setSearchFocused(false)}
             placeholder={currentEngine.placeholder || t('search.placeholder')}
             className={cn(
-              "w-full h-16 pl-40 pr-16 rounded-2xl", /* 调整内边距适应新按钮尺寸 */
+              "w-full h-16 pl-40 pr-14 rounded-2xl",
               "search-input text-lg"
             )}
           />
@@ -126,7 +126,7 @@ export function SearchBar() {
           <button
             type="submit"
             className={cn(
-              "absolute right-4 top-1/2 -translate-y-1/2",
+              "absolute right-3 top-1/2 -translate-y-1/2",
               "w-10 h-10 rounded-2xl flex items-center justify-center",
               "neumorphic-button",
               "text-claude-gray-600 dark:text-claude-gray-400"
