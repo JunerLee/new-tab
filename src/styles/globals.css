@@ -1,4 +1,5 @@
 @import './accessibility.css';
+@import './neumorphic.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,69 +21,304 @@
 }
 
 @layer components {
+  /* ===========================================
+     拟物化设计系统核心组件
+     =========================================== */
+  
+  /* 基础拟物化表面 */
+  .neumorphic-surface {
+    @apply bg-claude-cream dark:bg-claude-dark;
+    @apply shadow-neumorphic dark:shadow-neumorphic-dark;
+    @apply border-0 rounded-2xl;
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  /* 纸质卡片效果 */
   .paper-card {
-    @apply bg-paper-light dark:bg-paper-dark;
-    @apply shadow-neumorphism dark:shadow-neumorphism-dark;
-    @apply border-0; /* 移除边框，用阴影营造立体感 */
-    @apply rounded-2xl; /* 更圆润的圆角 */
+    @apply bg-claude-cream/95 dark:bg-claude-gray-900/95;
+    @apply backdrop-blur-sm;
+    @apply shadow-neumorphic dark:shadow-neumorphic-dark;
+    @apply border border-white/20 dark:border-white/10;
+    @apply rounded-2xl;
     @apply transition-all duration-300 ease-out;
   }
   
   .paper-card:hover {
-    @apply shadow-paper dark:shadow-paper-dark;
-    @apply -translate-y-1 scale-[1.02]; /* 更明显的悬浮效果 */
+    @apply shadow-float dark:shadow-float-dark;
+    @apply -translate-y-1 scale-[1.01];
+    @apply border-white/30 dark:border-white/15;
   }
   
-  .glass-effect {
-    @apply bg-white/85 dark:bg-black/50;
-    @apply backdrop-blur-md;
-    @apply shadow-soft;
-    @apply border border-white/30 dark:border-white/15;
+  /* 模态框专用 - 解决白天模式可见性问题 */
+  .modal-surface {
+    @apply bg-white/95 dark:bg-claude-gray-900/95;
+    @apply backdrop-blur-xl;
+    @apply shadow-modal dark:shadow-modal-dark;
+    @apply border-2 border-claude-gray-300/60 dark:border-white/15;
+    @apply rounded-3xl;
+    /* 确保白天模式下有足够的对比度 */
+    box-shadow: 
+      0 24px 64px rgba(0, 0, 0, 0.15), 
+      0 12px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+  
+  .dark .modal-surface {
+    box-shadow: 
+      0 24px 64px rgba(0, 0, 0, 0.8), 
+      0 12px 32px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  /* ===========================================
+     按钮系统
+     =========================================== */
+  
+  /* 主要拟物化按钮 */
+  .neumorphic-button {
+    @apply relative;
+    @apply bg-claude-cream dark:bg-claude-gray-800;
+    @apply shadow-neumorphic-sm dark:shadow-neumorphic-sm-dark;
+    @apply border-0 rounded-2xl;
+    @apply transition-all duration-200 ease-out;
+    @apply cursor-pointer;
+    /* 添加内部高光效果 */
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.05) 100%);
+  }
+  
+  .dark .neumorphic-button {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%);
+  }
+  
+  .neumorphic-button:hover {
+    @apply shadow-neumorphic dark:shadow-neumorphic-dark;
+    @apply -translate-y-0.5;
+    @apply scale-[1.02];
+  }
+  
+  .neumorphic-button:active {
+    @apply shadow-inset-sm dark:shadow-inset-sm-dark;
+    @apply translate-y-0 scale-[0.98];
+  }
+  
+  /* 小尺寸按钮 */
+  .neumorphic-button-sm {
+    @apply neumorphic-button;
+    @apply shadow-soft dark:shadow-soft;
     @apply rounded-xl;
   }
   
-  .search-input {
-    @apply w-full px-6 py-4 rounded-2xl; /* 更大的内边距和更圆润的边角 */
-    @apply bg-paper-light dark:bg-paper-dark;
-    @apply shadow-inset dark:shadow-inset-dark; /* 内凹效果 */
-    @apply focus:outline-none focus:shadow-neumorphism dark:focus:shadow-neumorphism-dark;
-    @apply placeholder-claude-gray-500 dark:placeholder-claude-gray-400;
-    @apply transition-all duration-300 ease-out;
-    @apply text-lg; /* 更大的字体 */
+  /* 大尺寸按钮 */
+  .neumorphic-button-lg {
+    @apply neumorphic-button;
+    @apply shadow-neumorphic-lg dark:shadow-neumorphic-lg-dark;
+    @apply rounded-3xl;
   }
+  
+  /* ===========================================
+     输入框系统
+     =========================================== */
+  
+  /* 搜索输入框 - 修复圆角问题 */
+  .search-input {
+    @apply w-full px-6 py-4;
+    @apply bg-claude-cream/90 dark:bg-claude-gray-800/90;
+    @apply shadow-inset dark:shadow-inset-dark;
+    @apply border-0;
+    @apply placeholder-claude-gray-500 dark:placeholder-claude-gray-400;
+    @apply text-lg font-medium;
+    @apply transition-all duration-300 ease-out;
+    @apply backdrop-blur-sm;
+    /* 强制圆角在所有状态下保持一致 */
+    border-radius: 1rem !important;
+    -webkit-border-radius: 1rem !important;
+    -moz-border-radius: 1rem !important;
+  }
+  
+  .search-input:focus {
+    @apply outline-none;
+    @apply shadow-neumorphic dark:shadow-neumorphic-dark;
+    @apply bg-claude-cream dark:bg-claude-gray-800;
+    @apply scale-[1.01];
+    /* 确保焦点时也保持圆角 */
+    border-radius: 1rem !important;
+    -webkit-border-radius: 1rem !important;
+    -moz-border-radius: 1rem !important;
+  }
+  
+  /* 标准输入框 */
+  .neumorphic-input {
+    @apply bg-claude-cream dark:bg-claude-gray-800;
+    @apply shadow-inset-sm dark:shadow-inset-sm-dark;
+    @apply border-0 rounded-xl px-4 py-3;
+    @apply transition-all duration-200 ease-out;
+  }
+  
+  .neumorphic-input:focus {
+    @apply outline-none shadow-neumorphic-sm dark:shadow-neumorphic-sm-dark;
+  }
+  
+  /* ===========================================
+     快速启动系统
+     =========================================== */
   
   .quick-launch-item {
     @apply relative;
     @apply flex flex-col items-center justify-center;
-    @apply w-20 h-20 rounded-2xl; /* 更大更圆润 */
-    @apply paper-card;
+    @apply w-20 h-20 rounded-2xl;
+    @apply bg-claude-cream/95 dark:bg-claude-gray-800/95;
+    @apply shadow-neumorphic-sm dark:shadow-neumorphic-sm-dark;
+    @apply border border-white/20 dark:border-white/10;
     @apply cursor-pointer;
     @apply transition-all duration-300 ease-out;
+    @apply backdrop-blur-sm;
+    /* 添加微妙的内部高光 */
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.05) 100%
+    ), var(--neuma-bg-light);
+  }
+  
+  .dark .quick-launch-item {
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.2) 100%
+    ), var(--neuma-bg-dark);
   }
   
   .quick-launch-item:hover {
-    @apply scale-110; /* 更明显的缩放效果 */
+    @apply shadow-float dark:shadow-float-dark;
+    @apply -translate-y-1 scale-105; /* 轻微减小缩放效果 */
+    @apply border-white/30 dark:border-white/15;
+    /* 悬停时增强高光 */
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.05) 100%
+    ), var(--neuma-bg-light);
   }
   
-  /* 新增按钮样式 */
-  .neumorphic-button {
-    @apply bg-paper-light dark:bg-paper-dark;
-    @apply shadow-neumorphism dark:shadow-neumorphism-dark;
-    @apply border-0 rounded-2xl;
-    @apply transition-all duration-200 ease-out;
-    @apply active:shadow-inset dark:active:shadow-inset-dark;
-    @apply active:scale-95;
+  .dark .quick-launch-item:hover {
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.2) 100%
+    ), var(--neuma-bg-dark);
   }
   
-  .neumorphic-button:hover {
-    @apply shadow-paper dark:shadow-paper-dark;
-    @apply -translate-y-0.5;
+  .quick-launch-item:active {
+    @apply shadow-inset-sm dark:shadow-inset-sm-dark;
+    @apply translate-y-0 scale-[0.98];
+    /* 点击时的凹陷效果 */
+    background: linear-gradient(
+      145deg,
+      rgba(0, 0, 0, 0.1) 0%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    ), var(--neuma-bg-light);
   }
+  
+  .dark .quick-launch-item:active {
+    background: linear-gradient(
+      145deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.02) 100%
+    ), var(--neuma-bg-dark);
+  }
+  
+  /* ===========================================
+     滑块和开关系统
+     =========================================== */
+  
+  /* 拟物化滑块 */
+  .neumorphic-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    @apply relative w-full h-2 rounded-full;
+    @apply bg-claude-cream dark:bg-claude-gray-800;
+    @apply shadow-inset dark:shadow-inset-dark;
+    @apply cursor-pointer;
+    @apply transition-all duration-200;
+  }
+  
+  .neumorphic-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    @apply w-6 h-6 rounded-full;
+    @apply bg-claude-cream dark:bg-claude-gray-700;
+    @apply shadow-neumorphic-sm dark:shadow-neumorphic-sm-dark;
+    @apply cursor-pointer;
+    @apply transition-all duration-200;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .dark .neumorphic-slider::-webkit-slider-thumb {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .neumorphic-slider::-webkit-slider-thumb:hover {
+    @apply shadow-float dark:shadow-float-dark;
+    @apply scale-110;
+  }
+  
+  /* Firefox 兼容性 */
+  .neumorphic-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--neuma-bg-light);
+    box-shadow: 
+      4px 4px 8px var(--neuma-shadow-light),
+      -4px -4px 8px var(--neuma-highlight-light);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+  }
+  
+  .dark .neumorphic-slider::-moz-range-thumb {
+    background: var(--neuma-bg-dark);
+    box-shadow: 
+      4px 4px 8px var(--neuma-shadow-dark),
+      -4px -4px 8px var(--neuma-highlight-dark);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* ===========================================
+     玻璃态效果
+     =========================================== */
+  
+  .glass-effect {
+    @apply bg-white/20 dark:bg-black/20;
+    @apply backdrop-blur-xl;
+    @apply border border-white/30 dark:border-white/15;
+    @apply rounded-2xl;
+    @apply shadow-medium;
+  }
+  
+  /* 强化玻璃态 - 用于重要元素 */
+  .glass-effect-strong {
+    @apply bg-white/40 dark:bg-black/40;
+    @apply backdrop-blur-2xl;
+    @apply border-2 border-white/40 dark:border-white/20;
+    @apply rounded-3xl;
+    @apply shadow-strong;
+  }
+  
+  /* ===========================================
+     工具类和效果
+     =========================================== */
   
   .icon-wrapper {
-    @apply w-8 h-8 rounded-lg;
+    @apply w-8 h-8 rounded-xl;
     @apply flex items-center justify-center;
     @apply transition-all duration-200;
+    @apply bg-gradient-to-br from-white/10 to-transparent;
   }
   
   .shimmer {
@@ -95,6 +331,34 @@
     @apply animate-shimmer;
     content: '';
   }
+  
+  /* 悬浮效果增强器 */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-float dark:shadow-float-dark;
+  }
+  
+  /* 渐变背景 */
+  .gradient-bg {
+    background: linear-gradient(
+      135deg,
+      rgba(251, 248, 245, 0.95) 0%,
+      rgba(247, 246, 245, 0.9) 50%,
+      rgba(239, 237, 233, 0.95) 100%
+    );
+  }
+  
+  .dark .gradient-bg {
+    background: linear-gradient(
+      135deg,
+      rgba(15, 15, 15, 0.95) 0%,
+      rgba(28, 28, 28, 0.9) 50%,
+      rgba(42, 40, 36, 0.95) 100%
+    );
+  }
 }
 
 @layer utilities {
@@ -104,5 +368,36 @@
   
   .text-pretty {
     text-wrap: pretty;
+  }
+  
+  /* 透明度工具类 */
+  .apply-opacity {
+    opacity: var(--bg-opacity, 1);
+  }
+  
+  /* 动态模糊 */
+  .apply-blur {
+    filter: blur(var(--bg-blur, 0px));
+  }
+  
+  /* 拟物化复选框 */
+  .neumorphic-checkbox {
+    @apply appearance-none w-5 h-5 rounded-lg;
+    @apply bg-claude-cream dark:bg-claude-gray-800;
+    @apply shadow-inset-sm dark:shadow-inset-sm-dark;
+    @apply border-0 cursor-pointer;
+    @apply transition-all duration-200 ease-out;
+    @apply relative;
+  }
+  
+  .neumorphic-checkbox:checked {
+    @apply shadow-neumorphic-sm dark:shadow-neumorphic-sm-dark;
+    @apply bg-claude-gray-200 dark:bg-claude-gray-700;
+  }
+  
+  .neumorphic-checkbox:checked::after {
+    content: '✓';
+    @apply absolute inset-0 flex items-center justify-center;
+    @apply text-claude-gray-700 dark:text-claude-gray-300 text-sm font-bold;
   }
 }

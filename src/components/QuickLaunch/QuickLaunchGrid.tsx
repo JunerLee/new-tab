@@ -220,7 +220,7 @@ export function QuickLaunchGrid() {
         <div className="w-16 h-0.5 bg-gradient-to-r from-claude-gray-300 to-transparent dark:from-claude-gray-600 mx-auto" />
       </div>
 
-      <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-4 sm:gap-5 md:gap-6">
         <AnimatePresence mode="popLayout">
           {sortedItems.map((item) => (
             <QuickLaunchItemComponent
@@ -249,7 +249,7 @@ export function QuickLaunchGrid() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="paper-card w-full max-w-md"
+              className="modal-surface w-full max-w-md"
             >
               <div className="flex items-center justify-between p-6 border-b border-claude-gray-200 dark:border-claude-gray-700">
                 <h3 className="text-lg font-semibold text-claude-gray-800 dark:text-claude-gray-200">
@@ -257,7 +257,7 @@ export function QuickLaunchGrid() {
                 </h3>
                 <button
                   onClick={handleCloseModal}
-                  className="p-1 rounded-lg hover:bg-claude-gray-100 dark:hover:bg-claude-gray-700 transition-colors"
+                  className="neumorphic-button-sm p-2 text-claude-gray-600 dark:text-claude-gray-400"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -273,11 +273,8 @@ export function QuickLaunchGrid() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className={cn(
-                      "w-full px-3 py-2 border rounded-lg",
-                      "bg-white dark:bg-claude-gray-800",
-                      "border-claude-gray-300 dark:border-claude-gray-600",
-                      "focus:ring-2 focus:ring-claude-gray-400 focus:border-transparent",
-                      formErrors.name && "border-red-500"
+                      "neumorphic-input-premium text-claude-gray-800 dark:text-claude-gray-200",
+                      formErrors.name && "!shadow-inset !border-red-500 !bg-red-50/20 dark:!bg-red-900/20"
                     )}
                     placeholder="Website name"
                   />
@@ -295,11 +292,8 @@ export function QuickLaunchGrid() {
                     value={formData.url}
                     onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                     className={cn(
-                      "w-full px-3 py-2 border rounded-lg",
-                      "bg-white dark:bg-claude-gray-800",
-                      "border-claude-gray-300 dark:border-claude-gray-600",
-                      "focus:ring-2 focus:ring-claude-gray-400 focus:border-transparent",
-                      formErrors.url && "border-red-500"
+                      "neumorphic-input-premium text-claude-gray-800 dark:text-claude-gray-200",
+                      formErrors.url && "!shadow-inset !border-red-500 !bg-red-50/20 dark:!bg-red-900/20"
                     )}
                     placeholder="https://example.com"
                   />
@@ -315,7 +309,7 @@ export function QuickLaunchGrid() {
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-3 py-2 border border-claude-gray-300 dark:border-claude-gray-600 rounded-lg bg-white dark:bg-claude-gray-800 focus:ring-2 focus:ring-claude-gray-400 focus:border-transparent"
+                    className="neumorphic-input-premium text-claude-gray-800 dark:text-claude-gray-200"
                   >
                     <option value="development">{t('quickLaunch.categories.development')}</option>
                     <option value="social">{t('quickLaunch.categories.social')}</option>
@@ -337,7 +331,7 @@ export function QuickLaunchGrid() {
                 </button>
                 <button
                   onClick={handleSubmit}
-                  className="neumorphic-button px-4 py-2 text-sm font-medium text-claude-gray-800 dark:text-claude-gray-200"
+                  className="neumorphic-button-premium px-4 py-2 text-sm font-medium text-claude-gray-800 dark:text-claude-gray-200"
                 >
                   {editingItem ? t('common.save') : t('common.add')}
                 </button>

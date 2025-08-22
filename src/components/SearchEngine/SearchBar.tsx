@@ -51,7 +51,7 @@ export function SearchBar() {
               onClick={() => setShowEngines(!showEngines)}
               className={cn(
                 "flex items-center gap-2 px-4 py-3 rounded-2xl",
-                "neumorphic-button",
+                "neumorphic-button-premium",
                 "text-claude-gray-700 dark:text-claude-gray-300"
               )}
             >
@@ -75,7 +75,7 @@ export function SearchBar() {
                   exit={{ opacity: 0, y: -10 }}
                   className={cn(
                     "absolute top-full left-0 mt-2 min-w-48",
-                    "paper-card p-2 z-20"
+                    "modal-surface p-2 z-20"
                   )}
                 >
                   {allEngines.map((engine) => (
@@ -128,7 +128,7 @@ export function SearchBar() {
             className={cn(
               "absolute right-3 top-1/2 -translate-y-1/2",
               "w-10 h-10 rounded-2xl flex items-center justify-center",
-              "neumorphic-button",
+              "neumorphic-button-premium",
               "text-claude-gray-600 dark:text-claude-gray-400"
             )}
           >
@@ -144,7 +144,7 @@ export function SearchBar() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="mt-2 paper-card p-3"
+            className="mt-2 modal-surface p-3"
           >
             <div className="text-sm text-claude-gray-500 dark:text-claude-gray-400">
               Press Enter to search for "{query}"

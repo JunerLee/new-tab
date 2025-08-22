@@ -7,6 +7,7 @@ import { useAppStore } from './stores/useAppStore'
 import { useTheme } from './hooks/useTheme'
 import { useGlobalShortcuts } from './hooks/useKeyboard'
 import { BackgroundImage } from './components/Background/BackgroundImage'
+import { BackgroundEffects } from './components/Background/BackgroundEffects'
 import { TimeWeather } from './components/TimeWeather'
 import { SearchBar } from './components/SearchEngine/SearchBar'
 import { QuickLaunchGrid } from './components/QuickLaunch/QuickLaunchGrid'
@@ -47,6 +48,7 @@ function App() {
     <ErrorBoundary onError={handleError} showDetails={process.env.NODE_ENV === 'development'}>
       <div className="min-h-screen relative overflow-hidden">
         {/* Background */}
+        <BackgroundEffects />
         <ErrorBoundary>
           <Suspense fallback={<SuspenseFallback text="Loading background..." />}>
             <BackgroundImage />
@@ -60,12 +62,13 @@ function App() {
           transition={{ delay: 1 }}
           onClick={handleSettingsClick}
           className={cn(
-            "fixed top-6 right-6 z-30", /* 提高z-index避免被其他元素覆盖 */
-            "w-14 h-14 rounded-2xl", /* 更大更圆润 */
-            "neumorphic-button", /* 使用新的拟物化按钮样式 */
+            "fixed top-6 right-6 z-30",
+            "w-16 h-16 rounded-3xl",
+            "neumorphic-button-premium neumorphic-glow",
             "flex items-center justify-center",
             "text-claude-gray-600 dark:text-claude-gray-400",
-            "hover:text-claude-gray-800 dark:hover:text-claude-gray-200"
+            "hover:text-claude-gray-800 dark:hover:text-claude-gray-200",
+            "transition-colors duration-300"
           )}
         >
           <Settings className="w-6 h-6" />

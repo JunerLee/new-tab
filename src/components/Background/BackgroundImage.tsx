@@ -13,9 +13,7 @@ export function BackgroundImage() {
   }
 
   const backgroundStyle = {
-    backgroundImage: `url(${currentBingImage.url})`,
-    filter: `blur(${settings.background.blurAmount}px)`,
-    opacity: settings.background.opacity / 100
+    backgroundImage: `url(${currentBingImage.url})`
   }
 
   return (
@@ -24,9 +22,9 @@ export function BackgroundImage() {
       <motion.div
         key={currentBingImage.url}
         initial={{ opacity: 0 }}
-        animate={{ opacity: settings.background.opacity / 100 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat apply-background-settings dynamic-opacity dynamic-blur"
         style={backgroundStyle}
       />
       

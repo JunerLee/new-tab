@@ -1,0 +1,368 @@
+/* ===========================================
+   专业拟物化设计系统 (Neumorphic Design System)
+   =========================================== */
+
+/* CSS 变量定义 */
+:root {
+  /* 光源方向 - 从左上角 */
+  --light-angle: 145deg;
+  
+  /* 浅色主题拟物化颜色 */
+  --neuma-bg-light: #fbf8f5;
+  --neuma-shadow-light: rgba(163, 157, 148, 0.4);
+  --neuma-highlight-light: rgba(255, 255, 255, 0.9);
+  --neuma-border-light: rgba(255, 255, 255, 0.3);
+  
+  /* 深色主题拟物化颜色 */
+  --neuma-bg-dark: #0f0f0f;
+  --neuma-shadow-dark: rgba(0, 0, 0, 0.8);
+  --neuma-highlight-dark: rgba(255, 255, 255, 0.08);
+  --neuma-border-dark: rgba(255, 255, 255, 0.15);
+}
+
+/* ===========================================
+   高级拟物化按钮系统
+   =========================================== */
+
+.neumorphic-button-premium {
+  position: relative;
+  background: var(--neuma-bg-light);
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  
+  /* 主要阴影效果 */
+  box-shadow: 
+    8px 8px 16px var(--neuma-shadow-light),
+    -8px -8px 16px var(--neuma-highlight-light),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    
+  /* 内部渐变效果 */
+  background: linear-gradient(
+    var(--light-angle),
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.05) 100%
+  ), var(--neuma-bg-light);
+}
+
+.dark .neumorphic-button-premium {
+  background: var(--neuma-bg-dark);
+  box-shadow: 
+    8px 8px 16px var(--neuma-shadow-dark),
+    -8px -8px 16px var(--neuma-highlight-dark),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    
+  background: linear-gradient(
+    var(--light-angle),
+    rgba(255, 255, 255, 0.05) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  ), var(--neuma-bg-dark);
+}
+
+/* 悬浮状态 */
+.neumorphic-button-premium:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 
+    12px 12px 24px var(--neuma-shadow-light),
+    -12px -12px 24px var(--neuma-highlight-light),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.dark .neumorphic-button-premium:hover {
+  box-shadow: 
+    12px 12px 24px var(--neuma-shadow-dark),
+    -12px -12px 24px var(--neuma-highlight-dark),
+    inset 0 2px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* 激活状态 */
+.neumorphic-button-premium:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 
+    inset 4px 4px 8px var(--neuma-shadow-light),
+    inset -4px -4px 8px var(--neuma-highlight-light);
+}
+
+.dark .neumorphic-button-premium:active {
+  box-shadow: 
+    inset 4px 4px 8px var(--neuma-shadow-dark),
+    inset -4px -4px 8px var(--neuma-highlight-dark);
+}
+
+/* ===========================================
+   高级拟物化输入框
+   =========================================== */
+
+.neumorphic-input-premium {
+  background: var(--neuma-bg-light);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 内凹效果 */
+  box-shadow: 
+    inset 3px 3px 6px var(--neuma-shadow-light),
+    inset -3px -3px 6px var(--neuma-highlight-light);
+}
+
+.dark .neumorphic-input-premium {
+  background: var(--neuma-bg-dark);
+  box-shadow: 
+    inset 3px 3px 6px var(--neuma-shadow-dark),
+    inset -3px -3px 6px var(--neuma-highlight-dark);
+}
+
+.neumorphic-input-premium:focus {
+  outline: none;
+  box-shadow: 
+    inset 4px 4px 8px var(--neuma-shadow-light),
+    inset -4px -4px 8px var(--neuma-highlight-light),
+    0 0 0 2px rgba(163, 157, 148, 0.2);
+  transform: scale(1.01);
+}
+
+.dark .neumorphic-input-premium:focus {
+  box-shadow: 
+    inset 4px 4px 8px var(--neuma-shadow-dark),
+    inset -4px -4px 8px var(--neuma-highlight-dark),
+    0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+/* ===========================================
+   拟物化卡片系统
+   =========================================== */
+
+.neumorphic-card-premium {
+  background: var(--neuma-bg-light);
+  border-radius: 20px;
+  border: 1px solid var(--neuma-border-light);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  box-shadow: 
+    10px 10px 20px var(--neuma-shadow-light),
+    -10px -10px 20px var(--neuma-highlight-light),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dark .neumorphic-card-premium {
+  background: var(--neuma-bg-dark);
+  border-color: var(--neuma-border-dark);
+  box-shadow: 
+    10px 10px 20px var(--neuma-shadow-dark),
+    -10px -10px 20px var(--neuma-highlight-dark),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.neumorphic-card-premium:hover {
+  transform: translateY(-2px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    15px 15px 30px var(--neuma-shadow-light),
+    -15px -15px 30px var(--neuma-highlight-light),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.dark .neumorphic-card-premium:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    15px 15px 30px var(--neuma-shadow-dark),
+    -15px -15px 30px var(--neuma-highlight-dark),
+    inset 0 2px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ===========================================
+   拟物化模态框系统
+   =========================================== */
+
+.neumorphic-modal-premium {
+  background: rgba(251, 248, 245, 0.98);
+  backdrop-filter: blur(20px);
+  border: 2px solid var(--neuma-border-light);
+  border-radius: 24px;
+  
+  box-shadow: 
+    0 24px 48px rgba(0, 0, 0, 0.15),
+    0 12px 24px rgba(0, 0, 0, 0.1),
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+}
+
+.dark .neumorphic-modal-premium {
+  background: rgba(15, 15, 15, 0.98);
+  border-color: var(--neuma-border-dark);
+  box-shadow: 
+    0 24px 48px rgba(0, 0, 0, 0.8),
+    0 12px 24px rgba(0, 0, 0, 0.6),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ===========================================
+   拟物化滑块系统
+   =========================================== */
+
+.neumorphic-slider-premium {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 8px;
+  background: var(--neuma-bg-light);
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  box-shadow: 
+    inset 2px 2px 4px var(--neuma-shadow-light),
+    inset -2px -2px 4px var(--neuma-highlight-light);
+}
+
+.dark .neumorphic-slider-premium {
+  background: var(--neuma-bg-dark);
+  box-shadow: 
+    inset 2px 2px 4px var(--neuma-shadow-dark),
+    inset -2px -2px 4px var(--neuma-highlight-dark);
+}
+
+.neumorphic-slider-premium::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--neuma-bg-light);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  box-shadow: 
+    4px 4px 8px var(--neuma-shadow-light),
+    -4px -4px 8px var(--neuma-highlight-light);
+}
+
+.dark .neumorphic-slider-premium::-webkit-slider-thumb {
+  background: var(--neuma-bg-dark);
+  box-shadow: 
+    4px 4px 8px var(--neuma-shadow-dark),
+    -4px -4px 8px var(--neuma-highlight-dark);
+}
+
+.neumorphic-slider-premium::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 
+    6px 6px 12px var(--neuma-shadow-light),
+    -6px -6px 12px var(--neuma-highlight-light);
+}
+
+.dark .neumorphic-slider-premium::-webkit-slider-thumb:hover {
+  box-shadow: 
+    6px 6px 12px var(--neuma-shadow-dark),
+    -6px -6px 12px var(--neuma-highlight-dark);
+}
+
+/* ===========================================
+   动态背景透明度系统
+   =========================================== */
+
+.dynamic-opacity {
+  opacity: var(--dynamic-opacity, 1);
+  transition: opacity 0.3s ease;
+}
+
+.dynamic-blur {
+  filter: blur(var(--dynamic-blur, 0px));
+  transition: filter 0.3s ease;
+}
+
+/* 背景透明度应用器 */
+.apply-background-settings {
+  --dynamic-opacity: var(--bg-opacity, 1);
+  --dynamic-blur: var(--bg-blur, 0px);
+}
+
+/* ===========================================
+   响应式断点调整
+   =========================================== */
+
+@media (max-width: 768px) {
+  .neumorphic-button-premium,
+  .neumorphic-card-premium {
+    border-radius: 12px;
+  }
+  
+  .neumorphic-modal-premium {
+    border-radius: 16px;
+  }
+  
+  /* 减少移动设备上的阴影强度 */
+  .neumorphic-button-premium {
+    box-shadow: 
+      4px 4px 8px var(--neuma-shadow-light),
+      -4px -4px 8px var(--neuma-highlight-light),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .neumorphic-button-premium {
+    box-shadow: 
+      4px 4px 8px var(--neuma-shadow-dark),
+      -4px -4px 8px var(--neuma-highlight-dark),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ===========================================
+   动画和过渡效果
+   =========================================== */
+
+.neumorphic-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.neumorphic-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.neumorphic-ripple:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* 微妙的发光效果 */
+.neumorphic-glow {
+  position: relative;
+}
+
+.neumorphic-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 255, 0.2), 
+    transparent, 
+    rgba(255, 255, 255, 0.1)
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.neumorphic-glow:hover::before {
+  opacity: 1;
+}

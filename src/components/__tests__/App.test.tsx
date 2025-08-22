@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@/test/utils'
-import App from '../App'
+import App from '../../App'
 import { useAppStore } from '@/stores/useAppStore'
 
 // Mock hooks

@@ -65,10 +65,10 @@ export function SettingsModal() {
               key={mode}
               onClick={() => updateSettings({ theme: { ...settings.theme, mode } })}
               className={cn(
-                "p-3 rounded-lg border-2 transition-all duration-200",
+                "neumorphic-button-premium p-4 text-center",
                 settings.theme.mode === mode
-                  ? "border-claude-gray-400 bg-claude-gray-100 dark:bg-claude-gray-700"
-                  : "border-claude-gray-200 dark:border-claude-gray-600 hover:border-claude-gray-300 dark:hover:border-claude-gray-500"
+                  ? "shadow-inset-sm dark:shadow-inset-sm-dark bg-claude-gray-200/50 dark:bg-claude-gray-700/50"
+                  : "hover:shadow-neumorphic dark:hover:shadow-neumorphic-dark"
               )}
             >
               <div className="text-sm font-medium text-claude-gray-800 dark:text-claude-gray-200">
@@ -91,7 +91,7 @@ export function SettingsModal() {
               onChange={(e) => updateSettings({
                 background: { ...settings.background, bingEnabled: e.target.checked }
               })}
-              className="rounded border-claude-gray-300 text-claude-gray-600 focus:ring-claude-gray-500"
+              className="neumorphic-checkbox"
             />
             <span className="ml-2 text-sm text-claude-gray-700 dark:text-claude-gray-300">
               {t('settings.appearance.backgroundTypes.bing')}
@@ -110,7 +110,7 @@ export function SettingsModal() {
               onChange={(e) => updateSettings({
                 background: { ...settings.background, blurAmount: Number(e.target.value) }
               })}
-              className="w-full"
+              className="w-full neumorphic-slider-premium"
             />
           </div>
 
@@ -126,7 +126,7 @@ export function SettingsModal() {
               onChange={(e) => updateSettings({
                 background: { ...settings.background, opacity: Number(e.target.value) }
               })}
-              className="w-full"
+              className="w-full neumorphic-slider-premium"
             />
           </div>
         </div>
@@ -143,7 +143,7 @@ export function SettingsModal() {
         <select
           value={settings.language}
           onChange={(e) => updateSettings({ language: e.target.value })}
-          className="w-full p-2 border border-claude-gray-300 dark:border-claude-gray-600 rounded-lg bg-white dark:bg-claude-gray-800"
+          className="w-full neumorphic-input-premium text-claude-gray-800 dark:text-claude-gray-200"
         >
           <option value="en">English</option>
           <option value="zh">中文</option>
@@ -156,7 +156,7 @@ export function SettingsModal() {
             type="checkbox"
             checked={settings.showTime}
             onChange={(e) => updateSettings({ showTime: e.target.checked })}
-            className="rounded border-claude-gray-300 text-claude-gray-600 focus:ring-claude-gray-500"
+            className="neumorphic-checkbox"
           />
           <span className="ml-2 text-sm text-claude-gray-700 dark:text-claude-gray-300">
             {t('settings.general.showTime')}
@@ -168,7 +168,7 @@ export function SettingsModal() {
             type="checkbox"
             checked={settings.showWeather}
             onChange={(e) => updateSettings({ showWeather: e.target.checked })}
-            className="rounded border-claude-gray-300 text-claude-gray-600 focus:ring-claude-gray-500"
+            className="neumorphic-checkbox"
           />
           <span className="ml-2 text-sm text-claude-gray-700 dark:text-claude-gray-300">
             {t('settings.general.showWeather')}
@@ -186,10 +186,10 @@ export function SettingsModal() {
               key={format}
               onClick={() => updateSettings({ timeFormat: format })}
               className={cn(
-                "p-3 rounded-lg border-2 transition-all duration-200",
+                "neumorphic-button-premium p-4 text-center",
                 settings.timeFormat === format
-                  ? "border-claude-gray-400 bg-claude-gray-100 dark:bg-claude-gray-700"
-                  : "border-claude-gray-200 dark:border-claude-gray-600 hover:border-claude-gray-300 dark:hover:border-claude-gray-500"
+                  ? "shadow-inset-sm dark:shadow-inset-sm-dark bg-claude-gray-200/50 dark:bg-claude-gray-700/50"
+                  : "hover:shadow-neumorphic dark:hover:shadow-neumorphic-dark"
               )}
             >
               <div className="text-sm font-medium text-claude-gray-800 dark:text-claude-gray-200">
@@ -217,13 +217,13 @@ export function SettingsModal() {
       <div className="grid grid-cols-1 gap-4">
         <button
           onClick={handleExport}
-          className="flex items-center justify-center gap-2 p-3 border border-claude-gray-300 dark:border-claude-gray-600 rounded-lg hover:bg-claude-gray-50 dark:hover:bg-claude-gray-700 transition-colors"
+          className="neumorphic-button-premium flex items-center justify-center gap-2 p-4 text-claude-gray-700 dark:text-claude-gray-300"
         >
           <Download className="w-4 h-4" />
           {t('settings.backup.export')}
         </button>
 
-        <label className="flex items-center justify-center gap-2 p-3 border border-claude-gray-300 dark:border-claude-gray-600 rounded-lg hover:bg-claude-gray-50 dark:hover:bg-claude-gray-700 transition-colors cursor-pointer">
+        <label className="neumorphic-button-premium flex items-center justify-center gap-2 p-4 text-claude-gray-700 dark:text-claude-gray-300 cursor-pointer">
           <Upload className="w-4 h-4" />
           {t('settings.backup.import')}
           <input
@@ -236,7 +236,7 @@ export function SettingsModal() {
 
         <button
           onClick={resetToDefaults}
-          className="flex items-center justify-center gap-2 p-3 border border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+          className="neumorphic-button-premium flex items-center justify-center gap-2 p-4 text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-900/20"
         >
           <RotateCcw className="w-4 h-4" />
           {t('settings.backup.reset')}
@@ -270,7 +270,7 @@ export function SettingsModal() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             onClick={(e) => e.stopPropagation()}
-            className="paper-card w-full max-w-2xl max-h-[80vh] overflow-hidden"
+            className="modal-surface w-full max-w-2xl max-h-[80vh] overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-claude-gray-200 dark:border-claude-gray-700">
@@ -279,7 +279,7 @@ export function SettingsModal() {
               </h2>
               <button
                 onClick={handleClose}
-                className="p-2 rounded-lg hover:bg-claude-gray-100 dark:hover:bg-claude-gray-700 transition-colors"
+                className="neumorphic-button-sm p-2 text-claude-gray-600 dark:text-claude-gray-400 hover:text-claude-gray-800 dark:hover:text-claude-gray-200"
               >
                 <X className="w-5 h-5" />
               </button>

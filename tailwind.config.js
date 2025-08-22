@@ -80,13 +80,40 @@ export default {
         },
       },
       boxShadow: {
+        // 基础阴影
+        'soft': '0 2px 6px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.03)',
+        'medium': '0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06)',
+        'strong': '0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08)',
+        
+        // 拟物化阴影系统
+        'neumorphic': '12px 12px 24px rgba(163, 157, 148, 0.2), -12px -12px 24px rgba(255, 255, 255, 0.9)',
+        'neumorphic-dark': '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(255, 255, 255, 0.08)',
+        
+        // 按钮状态阴影
+        'neumorphic-sm': '6px 6px 12px rgba(163, 157, 148, 0.15), -6px -6px 12px rgba(255, 255, 255, 0.8)',
+        'neumorphic-sm-dark': '6px 6px 12px rgba(0, 0, 0, 0.3), -6px -6px 12px rgba(255, 255, 255, 0.06)',
+        
+        'neumorphic-lg': '16px 16px 32px rgba(163, 157, 148, 0.25), -16px -16px 32px rgba(255, 255, 255, 0.95)',
+        'neumorphic-lg-dark': '16px 16px 32px rgba(0, 0, 0, 0.5), -16px -16px 32px rgba(255, 255, 255, 0.1)',
+        
+        // 内凹阴影
+        'inset': 'inset 4px 4px 8px rgba(163, 157, 148, 0.25), inset -4px -4px 8px rgba(255, 255, 255, 0.9)',
+        'inset-dark': 'inset 4px 4px 8px rgba(0, 0, 0, 0.4), inset -4px -4px 8px rgba(255, 255, 255, 0.1)',
+        
+        'inset-sm': 'inset 2px 2px 4px rgba(163, 157, 148, 0.2), inset -2px -2px 4px rgba(255, 255, 255, 0.8)',
+        'inset-sm-dark': 'inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.08)',
+        
+        // 浮起效果
+        'float': '0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08)',
+        'float-dark': '0 8px 32px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.4)',
+        
+        // 模态框阴影
+        'modal': '0 24px 64px rgba(0, 0, 0, 0.15), 0 12px 32px rgba(0, 0, 0, 0.1)',
+        'modal-dark': '0 24px 64px rgba(0, 0, 0, 0.8), 0 12px 32px rgba(0, 0, 0, 0.6)',
+        
+        // 纸质效果
         'paper': '0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
         'paper-dark': '0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-        'soft': '0 2px 6px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.03)',
-        'neumorphism': '8px 8px 16px rgba(163, 157, 148, 0.15), -8px -8px 16px rgba(255, 255, 255, 0.9)',
-        'neumorphism-dark': '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(255, 255, 255, 0.05)',
-        'inset': 'inset 2px 2px 4px rgba(163, 157, 148, 0.2), inset -2px -2px 4px rgba(255, 255, 255, 0.8)',
-        'inset-dark': 'inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.1)',
       },
       backdropBlur: {
         xs: '2px',
