@@ -1,0 +1,108 @@
+@import './accessibility.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-claude-gray-200 dark:border-claude-gray-700;
+  }
+  
+  body {
+    @apply bg-claude-cream dark:bg-claude-dark text-claude-gray-800 dark:text-claude-gray-200;
+    @apply font-sans antialiased;
+    @apply transition-colors duration-300;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+@layer components {
+  .paper-card {
+    @apply bg-paper-light dark:bg-paper-dark;
+    @apply shadow-neumorphism dark:shadow-neumorphism-dark;
+    @apply border-0; /* 移除边框，用阴影营造立体感 */
+    @apply rounded-2xl; /* 更圆润的圆角 */
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .paper-card:hover {
+    @apply shadow-paper dark:shadow-paper-dark;
+    @apply -translate-y-1 scale-[1.02]; /* 更明显的悬浮效果 */
+  }
+  
+  .glass-effect {
+    @apply bg-white/85 dark:bg-black/50;
+    @apply backdrop-blur-md;
+    @apply shadow-soft;
+    @apply border border-white/30 dark:border-white/15;
+    @apply rounded-xl;
+  }
+  
+  .search-input {
+    @apply w-full px-6 py-4 rounded-2xl; /* 更大的内边距和更圆润的边角 */
+    @apply bg-paper-light dark:bg-paper-dark;
+    @apply shadow-inset dark:shadow-inset-dark; /* 内凹效果 */
+    @apply focus:outline-none focus:shadow-neumorphism dark:focus:shadow-neumorphism-dark;
+    @apply placeholder-claude-gray-500 dark:placeholder-claude-gray-400;
+    @apply transition-all duration-300 ease-out;
+    @apply text-lg; /* 更大的字体 */
+  }
+  
+  .quick-launch-item {
+    @apply relative;
+    @apply flex flex-col items-center justify-center;
+    @apply w-20 h-20 rounded-2xl; /* 更大更圆润 */
+    @apply paper-card;
+    @apply cursor-pointer;
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .quick-launch-item:hover {
+    @apply scale-110; /* 更明显的缩放效果 */
+  }
+  
+  /* 新增按钮样式 */
+  .neumorphic-button {
+    @apply bg-paper-light dark:bg-paper-dark;
+    @apply shadow-neumorphism dark:shadow-neumorphism-dark;
+    @apply border-0 rounded-2xl;
+    @apply transition-all duration-200 ease-out;
+    @apply active:shadow-inset dark:active:shadow-inset-dark;
+    @apply active:scale-95;
+  }
+  
+  .neumorphic-button:hover {
+    @apply shadow-paper dark:shadow-paper-dark;
+    @apply -translate-y-0.5;
+  }
+  
+  .icon-wrapper {
+    @apply w-8 h-8 rounded-lg;
+    @apply flex items-center justify-center;
+    @apply transition-all duration-200;
+  }
+  
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+  
+  .shimmer::after {
+    @apply absolute inset-0;
+    @apply bg-gradient-to-r from-transparent via-white/20 to-transparent;
+    @apply animate-shimmer;
+    content: '';
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}

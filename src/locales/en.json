@@ -1,0 +1,90 @@
+{
+  "search": {
+    "placeholder": "Search the web...",
+    "engines": {
+      "google": "Google",
+      "bing": "Bing",
+      "duckduckgo": "DuckDuckGo",
+      "baidu": "Baidu"
+    }
+  },
+  "quickLaunch": {
+    "title": "Quick Launch",
+    "addNew": "Add New Site",
+    "edit": "Edit",
+    "delete": "Delete",
+    "categories": {
+      "all": "All",
+      "development": "Development",
+      "social": "Social",
+      "entertainment": "Entertainment",
+      "productivity": "Productivity",
+      "news": "News",
+      "shopping": "Shopping",
+      "education": "Education"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "auto": "Auto",
+      "background": "Background",
+      "backgroundTypes": {
+        "bing": "Bing Daily",
+        "solid": "Solid Color",
+        "gradient": "Gradient",
+        "custom": "Custom Image"
+      }
+    },
+    "general": {
+      "title": "General",
+      "language": "Language",
+      "searchEngine": "Default Search Engine",
+      "timeFormat": "Time Format",
+      "showWeather": "Show Weather",
+      "showTime": "Show Time"
+    },
+    "sync": {
+      "title": "Sync",
+      "enabled": "Enable Sync",
+      "provider": "Sync Provider",
+      "webdav": "WebDAV",
+      "local": "Local Storage"
+    },
+    "backup": {
+      "title": "Backup & Restore",
+      "export": "Export Settings",
+      "import": "Import Settings",
+      "reset": "Reset to Defaults"
+    }
+  },
+  "time": {
+    "goodMorning": "Good morning",
+    "goodAfternoon": "Good afternoon",
+    "goodEvening": "Good evening",
+    "goodNight": "Good night"
+  },
+  "weather": {
+    "humidity": "Humidity",
+    "windSpeed": "Wind Speed",
+    "loading": "Loading weather..."
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "name": "Name",
+    "url": "URL",
+    "category": "Category"
+  }
+}

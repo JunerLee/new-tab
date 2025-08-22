@@ -1,0 +1,134 @@
+{
+  "search": {
+    "placeholder": "搜索网络...",
+    "engines": {
+      "google": "谷歌",
+      "bing": "必应",
+      "duckduckgo": "DuckDuckGo",
+      "baidu": "百度"
+    }
+  },
+  "quickLaunch": {
+    "title": "快速启动",
+    "addNew": "添加新网站",
+    "edit": "编辑",
+    "delete": "删除",
+    "categories": {
+      "all": "全部",
+      "development": "开发",
+      "social": "社交",
+      "entertainment": "娱乐",
+      "productivity": "效率",
+      "news": "新闻",
+      "shopping": "购物",
+      "education": "教育"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "appearance": {
+      "title": "外观",
+      "theme": "主题",
+      "light": "浅色",
+      "dark": "深色",
+      "auto": "自动",
+      "background": "背景",
+      "backgroundTypes": {
+        "bing": "必应每日",
+        "solid": "纯色",
+        "gradient": "渐变",
+        "custom": "自定义图片"
+      },
+      "blurAmount": "模糊程度",
+      "opacity": "透明度"
+    },
+    "general": {
+      "title": "通用",
+      "language": "语言",
+      "searchEngine": "默认搜索引擎",
+      "timeFormat": "时间格式",
+      "showWeather": "显示天气",
+      "showTime": "显示时间",
+      "shortcuts": "键盘快捷键"
+    },
+    "sync": {
+      "title": "同步",
+      "enabled": "启用同步",
+      "provider": "同步服务商",
+      "webdav": "WebDAV",
+      "local": "本地存储",
+      "status": "同步状态",
+      "lastSync": "上次同步",
+      "autoSync": "自动同步",
+      "syncInterval": "同步间隔",
+      "testConnection": "测试连接",
+      "connecting": "连接中...",
+      "connected": "已连接",
+      "disconnected": "未连接",
+      "conflictResolution": "冲突解决策略",
+      "strategies": {
+        "latest": "使用最新版本",
+        "merge": "智能合并",
+        "manual": "手动解决"
+      }
+    },
+    "backup": {
+      "title": "备份与恢复",
+      "export": "导出设置",
+      "import": "导入设置",
+      "reset": "重置为默认",
+      "exportSuccess": "导出成功",
+      "importSuccess": "导入成功",
+      "resetSuccess": "重置成功"
+    }
+  },
+  "time": {
+    "goodMorning": "早上好",
+    "goodAfternoon": "下午好",
+    "goodEvening": "晚上好",
+    "goodNight": "夜晚好"
+  },
+  "weather": {
+    "humidity": "湿度",
+    "windSpeed": "风速",
+    "loading": "加载天气中..."
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "close": "关闭",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "success": "成功",
+    "name": "名称",
+    "url": "链接",
+    "category": "分类",
+    "confirm": "确认",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "retry": "重试",
+    "refresh": "刷新"
+  },
+  "errors": {
+    "networkError": "网络连接错误",
+    "invalidUrl": "无效的网址",
+    "syncFailed": "同步失败",
+    "importFailed": "导入失败",
+    "exportFailed": "导出失败",
+    "connectionFailed": "连接失败",
+    "unknownError": "未知错误"
+  },
+  "messages": {
+    "welcomeMessage": "欢迎使用新标签页！",
+    "noQuickLaunchItems": "暂无快速启动项，点击添加按钮开始",
+    "syncInProgress": "正在同步数据...",
+    "syncComplete": "同步完成",
+    "configSaved": "配置已保存",
+    "dataExported": "数据已导出",
+    "dataImported": "数据已导入"
+  }
+}
